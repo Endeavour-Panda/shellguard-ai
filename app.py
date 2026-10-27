@@ -60,7 +60,8 @@ footer { display: none !important; }
  .sg-hero { grid-template-columns: 1fr; gap: 22px; padding: 26px 22px; border-radius: 18px; }
  .sg-terminal { padding: 16px 18px; }
  .sg-terminal-top { margin-bottom: 12px; }
- #input-panel, #output-panel { min-width: 0 !important; padding: 16px; }
+ #workspace { flex-direction: column !important; }
+ #input-panel, #output-panel { min-width: 0 !important; width: 100% !important; flex: none !important; box-sizing: border-box; padding: 16px; }
  .sg-footer { flex-direction: column; gap: 6px; }
 }
 """

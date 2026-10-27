@@ -66,6 +66,9 @@ with sync_playwright() as p:
     page.get_by_role('button',name='分析命令',exact=True).wait_for(timeout=60000)
     expect(page.locator('body')).to_contain_text('李振昊创作')
     assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth + 2'), 'Mobile page overflow'
+    source_box=page.locator('#input-panel').bounding_box()
+    result_box=page.locator('#output-panel').bounding_box()
+    assert source_box and result_box and result_box['y'] >= source_box['y'] + source_box['height'] - 2, 'Mobile panels must stack vertically'
     page.screenshot(path=str(out/'04-public-mobile.png'),full_page=True)
     checks.append('Mobile 390px layout without horizontal page overflow')
     browser.close()

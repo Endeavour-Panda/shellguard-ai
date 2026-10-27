@@ -1,12 +1,12 @@
 # 公网演示材料
 
-访问：[ShellGuard AI](https://0e26bd6ced90cba556.gradio.live)
+访问：[ShellGuard AI](https://8ba1ea41a7112e6e6c.gradio.live)
 
 ![访问二维码](shellguard-qr.png)
 
 二维码仅包含网址，已用独立的 zxing-cpp 解码器核对。用户名 `student`，使用当前 Web 密码；密码不随材料发布。
 
-2026-10-27 09:24 UTC 从外网 Chromium 实测完成：HTTPS 登录、1.5B LoRA 模型页面、真实本地模型响应、带空格文件名转换、严重风险提示、JSON 下载。命令均未执行。检查清单见 [verification.json](verification.json)。
+2026-10-27 09:28 UTC 从外网 Chromium 实测完成：HTTPS 登录、1.5B LoRA 模型页面、真实本地模型响应、带空格文件名转换、严重风险提示、JSON 下载。命令均未执行。检查清单见 [verification.json](verification.json)。
 
 - [登录页截图](00-public-login.png)
 - [手机页面截图](04-public-mobile.png)

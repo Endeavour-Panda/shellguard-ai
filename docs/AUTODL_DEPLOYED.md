@@ -5,7 +5,7 @@
 
 ## 访问
 
-**已验证公网地址（2026-10-27）：https://0e26bd6ced90cba556.gradio.live**
+**已验证公网地址（2026-10-27）：https://8ba1ea41a7112e6e6c.gradio.live**
 
 [二维码 PNG](../artifacts/public/shellguard-qr.png) · [二维码 SVG](../artifacts/public/shellguard-qr.svg) · [公网验收记录](../artifacts/public/verification.json)
 
