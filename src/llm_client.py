@@ -131,4 +131,7 @@ class MockClient:
 
 
 def create_client(settings: Settings) -> Client:
+    if settings.effective_backend == "local":
+        from src.local_client import LocalClient
+        return LocalClient(settings)
     return MockClient() if settings.effective_backend == "mock" else OpenAICompatibleClient(settings)

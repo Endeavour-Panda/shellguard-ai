@@ -1,0 +1,12 @@
+services:
+  shellguard:
+    build: .
+    ports:
+      - "${APP_BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-7860}:7860"
+    env_file:
+      - .env
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 7860
+    restart: unless-stopped
+    init: true

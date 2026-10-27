@@ -1,0 +1,13 @@
+.git
+.env
+.env.*
+.venv
+__pycache__
+.pytest_cache
+*.pyc
+training_outputs
+adapters
+checkpoints
+data/private
+work
+artifacts

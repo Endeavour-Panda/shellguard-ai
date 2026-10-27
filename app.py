@@ -4,10 +4,14 @@ import html
 import json
 import os
 import re
+import time
+from datetime import datetime, timezone
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "False")
 
 import gradio as gr
+from gradio.processing_utils import save_bytes_to_cache
+from gradio.utils import get_upload_folder
 from pydantic import ValidationError
 
 from src.analyzer import Analyzer
@@ -17,6 +21,12 @@ from src.schemas import AnalysisRequest, AnalysisResult, Mode, RISK_LABELS, Shel
 
 EMPTY_REPORT = "输入命令并点击“分析命令”以查看结果。"
 CSS = """
+.gradio-container { max-width: 1280px !important; }
+.shellguard-head { background: linear-gradient(120deg, #0f172a, #164e63); border-radius: 20px; padding: 28px !important; margin-bottom: 18px; }
+.shellguard-head h1, .shellguard-head p { color: #f8fafc !important; }
+.shellguard-head h1 { font-size: 34px !important; }
+#result-panel { border: 1px solid var(--border-color-primary); border-radius: 16px; padding: 22px; min-height: 300px; }
+#analysis-summary { padding: 12px; border-radius: 10px; background: var(--background-fill-secondary); }
 .shellguard-head { border-bottom: 1px solid var(--border-color-primary); padding-bottom: 12px; }
 .shellguard-head h1 { font-size: 28px; letter-spacing: -0.5px; }
 footer { display: none !important; }
@@ -37,12 +47,16 @@ def _code(text: str) -> str:
 def _render_result(result: AnalysisResult) -> tuple[str, str, str]:
     backend = {
         "mock": "模拟模式（未调用 API）",
+        "local": "本地模型已返回" if result.model else "本地模型推理失败",
         "real": "真实 API 已返回" if result.model else "真实 API 调用失败（未获得有效模型分析）",
         "unconfigured": "API 配置不完整（未调用模型）",
     }[result.backend]
     request = result.request
     header = f"## 总风险：{RISK_LABELS[result.overall_risk]}（{result.overall_risk.value}）\n{backend}"
-    context = f"**模式：**{request.mode.value} · {request.source_shell.value} → {request.target_shell.value}"
+    context = f"**模式：**{request.mode.value} · {request.source_shell.value}"
+    if request.mode == Mode.CONVERT:
+        context += f" → {request.target_shell.value}"
+    context += f"\n\n### 原始命令\n{_code(request.command)}"
     if result.model is None:
         model_section = f"### 模型分析未完成\n{_plain(result.error or '没有有效结果。')}\n\n静态风险检测仍独立运行。"
     else:
@@ -88,6 +102,58 @@ def run_analysis(analyzer: Analyzer, raw: str, source: str, target: str, mode: s
     return _render_result(analyzer.analyze(request))
 
 
+def history_choices(history):
+    return [(f"{item['time']} · {json.loads(item['payload'])['request']['command'][:48]}", str(index))
+            for index, item in enumerate(history)]
+
+
+def analyze_session(analyzer, raw, source, target, mode, history):
+    started = time.perf_counter()
+    report, payload, copied = run_analysis(analyzer, raw, source, target, mode)
+    history = list(history or [])
+    if payload:
+        result = AnalysisResult.model_validate_json(payload)
+        history.insert(0, {"time": datetime.now(timezone.utc).strftime("%H:%M:%S UTC"),
+                           "payload": payload, "report": report})
+        history = history[:20]
+        status = "分析完成" if result.model else "模型未完成 · 静态检测可用"
+        summary = f"**{status}** · 风险：{RISK_LABELS[result.overall_risk]} · 命中 {len(result.static_findings)} 条规则 · {time.perf_counter() - started:.2f} 秒"
+    else:
+        summary = "**请检查输入**"
+    return report, payload, copied, history, gr.update(choices=history_choices(history), value=None), summary, gr.update(value=None, interactive=False), gr.update(value=None, interactive=False)
+
+
+def restore_history(index, history):
+    if index is None:
+        return (gr.skip(),) * 10
+    try:
+        item = history[int(index)]
+        request = AnalysisResult.model_validate_json(item["payload"]).request
+    except (IndexError, ValueError, TypeError):
+        return (gr.skip(),) * 10
+    return (request.command, request.source_shell.value, request.target_shell.value, request.mode.value,
+            item["report"], item["payload"], item["report"], "**已恢复会话记录**", gr.update(value=None, interactive=False), gr.update(value=None, interactive=False))
+
+
+def export_result(payload):
+    if not payload:
+        raise gr.Error("请先完成一次分析，再导出结果。")
+    result = AnalysisResult.model_validate_json(payload)
+    report, structured, _ = _render_result(result)
+    cache = get_upload_folder()
+    return (
+        save_bytes_to_cache(report.encode("utf-8"), "shellguard-analysis.md", cache),
+        save_bytes_to_cache(structured.encode("utf-8"), "shellguard-analysis.json", cache),
+    )
+
+
+def launch_auth(settings):
+    password = settings.app_password.get_secret_value()
+    if bool(settings.app_username) != bool(password):
+        raise ConfigurationError("访问口令配置不完整：APP_USERNAME 与 APP_PASSWORD 必须同时填写。")
+    return (settings.app_username, password) if password else None
+
+
 def create_app(settings: Settings | None = None) -> gr.Blocks:
     settings = settings or load_settings()
     analyzer = Analyzer(settings)
@@ -97,43 +163,74 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
     except ConfigurationError as exc:
         backend, configuration_error = "unconfigured", str(exc)
 
-    with gr.Blocks(title="ShellGuard AI · Shell 命令分析", theme=gr.themes.Default(), css=CSS, analytics_enabled=False) as demo:
-        gr.Markdown("# ShellGuard AI\n跨 Shell 命令智能分析助手 · 文本分析，不执行命令", elem_classes=["shellguard-head"])
+    with gr.Blocks(title="ShellGuard AI · Shell 命令分析", theme=gr.themes.Soft(primary_hue="cyan", neutral_hue="slate",
+                   font=["system-ui", "sans-serif"], font_mono=["ui-monospace", "monospace"]),
+                   css=CSS, analytics_enabled=False, delete_cache=(3600, 3600)) as demo:
+        history = gr.State([])
+        gr.Markdown("# ShellGuard AI\n跨 Shell 命令智能分析助手\n\n读懂命令 · 迁移语法 · 识别风险", elem_classes=["shellguard-head"])
         if backend == "mock":
-            gr.Markdown("**离线模拟模式 · 未调用模型 API。** 12 组示例使用预置对照；未知命令仅提供静态检测，不虚构模型分析。")
+            gr.Markdown("**离线演示** · 未调用大模型。12 组预置样例可体验完整流程，未知命令仅提供静态检测。")
+        elif backend == "local":
+            label = "LoRA 微调模型" if settings.local_adapter else "基础模型"
+            gr.Markdown(f"**本地推理 · {label}** · 首次分析需加载权重，CPU 推理可能较慢。")
         elif backend == "real":
-            gr.Markdown(f"**真实 API 模式 · 模型：{_plain(settings.model_name)}。** 调用成功与否以每次结果为准。请勿提交凭据或敏感内容。")
+            gr.Markdown(f"**在线模型 · {_plain(settings.model_name)}** · 调用状态以每次分析结果为准。")
         else:
             gr.Markdown(f"**配置提示：**{_plain(configuration_error)} 静态检测仍可使用。")
         with gr.Row():
-            mode = gr.Dropdown([x.value for x in Mode], value=Mode.EXPLAIN.value, label="功能模式", interactive=True)
-            source = gr.Dropdown([x.value for x in Shell], value=Shell.BASH.value, label="源 Shell", interactive=True)
-            target = gr.Dropdown([x.value for x in Shell], value=Shell.POWERSHELL.value, label="目标 Shell（转换模式使用）", interactive=False)
-        command = gr.Textbox(label="待分析命令", placeholder="例如：ls 或 Get-ChildItem", lines=5, max_lines=14, max_length=8000)
-        with gr.Row():
-            analyze_button = gr.Button("分析命令", variant="primary")
-            clear_button = gr.Button("清空输入与结果")
-        with gr.Accordion("12 个可载入示例", open=False):
-            gr.Markdown("点击载入命令及 Shell。涉及文件的示例需预先准备测试文件；删除示例存在数据丢失风险。")
-            gr.Examples(examples=gradio_examples(), inputs=[command, source, target, mode], examples_per_page=12, label="示例命令")
-        report = gr.Markdown(EMPTY_REPORT, sanitize_html=True)
-        with gr.Accordion("复制完整分析结果", open=False):
-            copy_result = gr.Textbox(label="分析结果（Markdown 文本）", interactive=False, lines=10, show_copy_button=True)
-        with gr.Accordion("结构化 JSON", open=False):
-            structured = gr.Code(label="JSON（右上角可复制）", language="json", interactive=False, lines=20)
-        with gr.Accordion("页面使用说明", open=False):
-            gr.Markdown("1. 选择功能模式和源 Shell；转换时再选择目标 Shell。\n2. 输入命令或点击示例，然后点击“分析命令”。\n3. 分别查看模型判断与静态检测，并核对原始/转换命令的风险来源。\n4. 在复制区点击复制按钮；清空按钮同时清空输入和结果。\n\n本应用不执行命令；低风险、模拟对照或模型输出均不构成安全保证。")
+            with gr.Column(scale=5, min_width=320):
+                gr.Markdown("### 01 / 输入命令")
+                mode = gr.Radio([x.value for x in Mode], value=Mode.EXPLAIN.value, label="分析任务")
+                with gr.Row():
+                    source = gr.Dropdown([x.value for x in Shell], value=Shell.BASH.value, label="源 Shell")
+                    target = gr.Dropdown([x.value for x in Shell], value=Shell.POWERSHELL.value, label="目标 Shell", interactive=False)
+                command = gr.Textbox(label="命令文本", placeholder="输入 ls，或从下方示例开始…", lines=7, max_lines=16, max_length=8000)
+                with gr.Row():
+                    analyze_button = gr.Button("分析命令", variant="primary")
+                    clear_button = gr.Button("清空输入与结果")
+                gr.Markdown("仅分析文本，不执行命令。请勿输入密码、令牌等敏感内容。")
+                with gr.Accordion("示例库 · 点击载入", open=True):
+                    gr.Examples(examples=gradio_examples(), inputs=[command, source, target, mode], examples_per_page=6, label="12 个场景")
+                with gr.Accordion("本次会话记录", open=False):
+                    gr.Markdown("最多保留最近 20 条；不同浏览器会话相互隔离，刷新页面后重置。")
+                    history_picker = gr.Dropdown(choices=[], label="选择记录以恢复输入与结果", interactive=True)
+                    clear_history = gr.Button("清除会话记录")
+            with gr.Column(scale=7, min_width=320):
+                gr.Markdown("### 02 / 分析结果")
+                summary = gr.Markdown("等待分析 · 选择示例或输入命令开始", elem_id="analysis-summary")
+                with gr.Tabs():
+                    with gr.Tab("可读分析"):
+                        report = gr.Markdown(EMPTY_REPORT, sanitize_html=True, elem_id="result-panel")
+                    with gr.Tab("结构化 JSON"):
+                        structured = gr.Code(label="JSON", language="json", interactive=False, lines=24)
+                    with gr.Tab("复制与导出"):
+                        copy_result = gr.Textbox(label="Markdown 文本", interactive=False, lines=12, show_copy_button=True)
+                        export_button = gr.Button("生成下载文件")
+                        with gr.Row():
+                            download_md = gr.DownloadButton("下载 Markdown", value=None, interactive=False)
+                            download_json = gr.DownloadButton("下载 JSON", value=None, interactive=False)
+        with gr.Accordion("使用指南与实验展示", open=False):
+            gr.Markdown("1. **命令解释**：输入 `ls`，查看含义、风险与验证建议。\n2. **跨 Shell 转换**：选择 Bash → PowerShell，输入 `ls`，对照转换结果及语义差异。\n3. **风险分析**：输入 `rm -rf /`，查看严重风险及命中的静态规则（不会执行）。\n4. **保存材料**：在复制与导出页下载分析文件；会话记录可恢复之前的案例。\n\n真实 API、本地基础模型和 LoRA 模型均通过服务端环境变量切换。离线演示不代表真实推理或微调效果。")
 
         outputs = [report, structured, copy_result]
-        analyze_button.click(lambda *values: run_analysis(analyzer, *values), [command, source, target, mode], outputs, api_name="analyze", concurrency_limit=4)
-        mode.change(
-            lambda value: (gr.update(interactive=value == Mode.CONVERT.value), EMPTY_REPORT, "", ""),
-            inputs=[mode], outputs=[target, *outputs], queue=False, api_name=False,
-        )
-        clear_button.click(lambda: ("", EMPTY_REPORT, "", ""), outputs=[command, *outputs], queue=False, api_name=False)
+        analyze_button.click(lambda *values: analyze_session(analyzer, *values),
+                             [command, source, target, mode, history],
+                             [*outputs, history, history_picker, summary, download_md, download_json],
+                             api_name="analyze", concurrency_limit=4)
+        mode.change(lambda value: gr.update(interactive=value == Mode.CONVERT.value),
+                    inputs=[mode], outputs=[target], queue=False, api_name=False)
+        clear_button.click(lambda: ("", EMPTY_REPORT, "", "", "等待分析", gr.update(value=None, interactive=False), gr.update(value=None, interactive=False)),
+                           outputs=[command, *outputs, summary, download_md, download_json], api_name=False)
+        history_picker.input(restore_history, [history_picker, history],
+                             [command, source, target, mode, *outputs, summary, download_md, download_json], api_name=False)
+        clear_history.click(lambda: ([], gr.update(choices=[], value=None)), outputs=[history, history_picker], api_name=False)
+        export_button.click(lambda payload: tuple(gr.update(value=path, interactive=True) for path in export_result(payload)),
+                            [structured], [download_md, download_json], api_name=False)
     return demo.queue(max_size=20, default_concurrency_limit=4)
 
 
 if __name__ == "__main__":
     config = load_settings()
-    create_app(config).launch(server_name=config.host, server_port=config.port, share=False, show_error=False, max_threads=8)
+    auth = launch_auth(config)
+    create_app(config).launch(server_name=config.host, server_port=config.port, share=False,
+                             auth=auth, show_error=False, max_threads=8)

@@ -19,7 +19,11 @@ class Settings(BaseModel):
     api_key: SecretStr = Field(default_factory=lambda: SecretStr(""))
     base_url: str = ""
     model_name: str = ""
-    backend: Literal["auto", "mock", "real"] = "auto"
+    backend: Literal["auto", "mock", "real", "local"] = "auto"
+    local_model: str = "Qwen/Qwen2.5-0.5B-Instruct"
+    local_adapter: str = ""
+    app_username: str = ""
+    app_password: SecretStr = Field(default_factory=lambda: SecretStr(""))
     timeout_seconds: float = Field(default=30, ge=1, le=180)
     max_output_tokens: int = Field(default=2500, ge=256, le=8192)
     host: str = "127.0.0.1"
@@ -49,7 +53,9 @@ class Settings(BaseModel):
         return value.rstrip("/")
 
     @property
-    def effective_backend(self) -> Literal["mock", "real"]:
+    def effective_backend(self) -> Literal["mock", "real", "local"]:
+        if self.backend == "local":
+            return "local"
         if self.backend == "mock":
             return "mock"
         present = [bool(self.api_key.get_secret_value()), bool(self.base_url), bool(self.model_name)]
@@ -72,4 +78,8 @@ def load_settings() -> Settings:
         max_output_tokens=os.getenv("MODEL_MAX_OUTPUT_TOKENS", "2500"),
         host=os.getenv("APP_HOST", "127.0.0.1"),
         port=os.getenv("APP_PORT", "7860"),
+        local_model=os.getenv("LOCAL_MODEL", "Qwen/Qwen2.5-0.5B-Instruct").strip(),
+        local_adapter=os.getenv("LOCAL_ADAPTER", "").strip(),
+        app_username=os.getenv("APP_USERNAME", "").strip(),
+        app_password=SecretStr(os.getenv("APP_PASSWORD", "")),
     )

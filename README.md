@@ -2,6 +2,10 @@
 
 ShellGuard AI 是一个基于 Python、Gradio 和 OpenAI 兼容 API 的 Shell 命令文本分析工具。它解释命令、提供 Bash、PowerShell、CMD 之间的转换建议，并把模型判断与静态风险规则分开呈现。应用不会执行用户命令，也不会把输出描述为已经验证。
 
+## 本次完善
+
+新增双栏分析工作台、会话历史恢复、Markdown/JSON 文件下载、可选登录、Docker 部署和本地基础模型/LoRA 推理入口。具体操作见 [启动与演示手册](docs/DEPLOYMENT.md)。
+
 ## 启动
 
 Python 3.10 或更新版本：
@@ -35,7 +39,7 @@ SHELLGUARD_BACKEND=auto
 
 选择“命令解释”“跨 Shell 转换”或“风险分析”，再选择源 Shell。转换模式可设置目标 Shell。输入命令或选择示例后点击“分析命令”；结果分别列出总体风险、模型解释、转换建议、语义差异、验证建议及原始/转换文本各自命中的静态规则。转换命令会注明未经验证。
 
-“复制完整分析结果”和 JSON 结果区域提供复制按钮。“清空输入与结果”会清空命令及分析。页面包含 12 个示例，文件操作只应在已准备好的测试目录中人工审阅。
+“复制与导出”和 JSON 结果区域提供复制按钮，并可下载 Markdown/JSON 文件。会话历史最多保留 20 条，可恢复输入及结果。“清空输入与结果”会清空命令及分析。页面包含 12 个示例，文件操作只应在已准备好的测试目录中人工审阅。
 
 ## 风险规则边界
 
@@ -85,3 +89,24 @@ python -m training.evaluate \
 训练脚本默认使用 NF4 量化、LoRA rank 8、alpha 16、5 个 epoch，只对 assistant 的结构化答案计算损失。`training_manifest.json` 会记录基础模型、数据 SHA256、参数、GPU 和训练指标。当前种子数据用于验证流程，不足以证明生产质量；正式实验应继续人工审核扩充，并根据独立测试集比较 JSON 有效率、风险等级准确率和转换命令精确匹配率。
 
 AutoDL 上传和运行步骤见 [training/AUTODL.md](training/AUTODL.md)。
+
+## 微调模型接回 Web 与结果对比
+
+完成上述训练后，在安装了 `requirements-local.txt` 的环境中设置：
+
+```dotenv
+SHELLGUARD_BACKEND=local
+LOCAL_MODEL=Qwen/Qwen2.5-0.5B-Instruct
+LOCAL_ADAPTER=training_outputs/qwen25-05b-shellguard/final_adapter
+```
+
+重启 `python app.py`，页面会显示“本地推理 · LoRA 微调模型”。留空 `LOCAL_ADAPTER` 可运行基础模型。
+
+```bash
+python -m training.compare \
+  --base training_outputs/base_eval.json \
+  --tuned training_outputs/lora_eval.json \
+  --output training_outputs/comparison.md
+```
+
+比较工具校验两次评估的基础模型、请求和标注是否一致，重新计算指标；无效 JSON 也计入转换任务分母。现有 eval 数据同时用于训练中的模型选择，因此结果应称为验证集结果；正式泛化评估需另外准备不参与训练与模型选择的独立测试集，再通过 `training.evaluate --eval-file` 评估。仓库不会预置虚构的训练成绩。

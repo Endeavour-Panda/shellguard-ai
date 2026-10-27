@@ -6,8 +6,8 @@ from pathlib import Path
 
 from src.finetuning import build_training_messages
 from src.llm_client import ModelClientError, parse_model_response
-from src.schemas import Mode
-from training.validate_data import load_records
+from training.metrics import summarize
+from training.validate_data import fingerprint, load_records
 
 
 def parse_args():
@@ -47,12 +47,11 @@ def main() -> None:
     model.eval()
 
     rows = []
-    valid = risk_correct = conversion_correct = conversion_total = 0
     records = load_records(args.eval_file)
     for record in records:
         prompt_messages = build_training_messages(record.request, record.answer)[:-1]
         prompt = tokenizer.apply_chat_template(prompt_messages, tokenize=False, add_generation_prompt=True)
-        inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+        inputs = tokenizer(prompt, return_tensors="pt", add_special_tokens=False).to(model.device)
         with torch.inference_mode():
             generated = model.generate(
                 **inputs, max_new_tokens=args.max_new_tokens, do_sample=False,
@@ -64,11 +63,6 @@ def main() -> None:
         error = None
         try:
             parsed = parse_model_response(raw)
-            valid += 1
-            risk_correct += int(parsed.risk_level == record.answer.risk_level)
-            if record.request.mode == Mode.CONVERT:
-                conversion_total += 1
-                conversion_correct += int(parsed.converted_command == record.answer.converted_command)
         except ModelClientError as exc:
             error = str(exc)
         rows.append({
@@ -79,14 +73,11 @@ def main() -> None:
             "error": error,
         })
 
-    total = len(records)
     report = {
         "model": args.model,
         "adapter": str(args.adapter) if args.adapter else None,
-        "total": total,
-        "valid_json_rate": valid / total,
-        "risk_accuracy": risk_correct / total,
-        "conversion_exact_match": conversion_correct / conversion_total if conversion_total else None,
+        "eval_sha256": fingerprint(args.eval_file),
+        **summarize(rows),
         "records": rows,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

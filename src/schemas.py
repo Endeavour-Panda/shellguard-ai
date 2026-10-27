@@ -85,7 +85,7 @@ class RuleFinding(StrictModel):
 
 class AnalysisResult(StrictModel):
     request: AnalysisRequest
-    backend: Literal["mock", "real", "unconfigured"]
+    backend: Literal["mock", "real", "local", "unconfigured"]
     model: ModelAnalysis | None
     conversion_source: Literal["model", "rule", "none"] = "none"
     static_findings: list[RuleFinding]

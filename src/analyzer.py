@@ -1,5 +1,7 @@
 """Application workflow. This module never passes input to a shell."""
 
+from threading import Lock
+
 from src.config import ConfigurationError, Settings
 from src.llm_client import Client, ModelClientError, create_client
 from src.schemas import AnalysisRequest, AnalysisResult, Mode, highest_risk
@@ -11,6 +13,7 @@ class Analyzer:
     def __init__(self, settings: Settings, client: Client | None = None):
         self.settings = settings
         self.client = client
+        self.client_lock = Lock()
 
     def analyze(self, request: AnalysisRequest) -> AnalysisResult:
         findings = [*detect_risks_by_statement(request.command, request.source_shell)]
@@ -19,8 +22,9 @@ class Analyzer:
         backend = "unconfigured"
         conversion_source = "none"
         try:
-            if self.client is None:
-                self.client = create_client(self.settings)
+            with self.client_lock:
+                if self.client is None:
+                    self.client = create_client(self.settings)
             client = self.client
             backend = client.backend
             result = client.analyze(request)
