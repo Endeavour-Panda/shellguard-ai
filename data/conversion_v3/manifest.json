@@ -1,0 +1,15 @@
+{
+  "train": {
+    "count": 197,
+    "sha256": "1c3ec98c58bbed513624dc5d076513a08dc8457a310f5b0bb8bbcc6f51f0cbba"
+  },
+  "validation": {
+    "count": 18,
+    "sha256": "1e1ba05660bfe0c369ffb03180f5e847b43d13f75e17542f98076f9c4e2ceb42"
+  },
+  "test": {
+    "count": 32,
+    "sha256": "c40cfc7478c23cf297708476ff6cc33be7dedbfeea5430fd04393bb02579dab0"
+  },
+  "limitations": "Synthetic, same-family literal-command split. Does not establish arbitrary shell equivalence. Legacy validation excluded from training. Test not used for checkpoint selection."
+}

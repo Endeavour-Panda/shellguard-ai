@@ -4,9 +4,15 @@ ShellGuard AI 是一个基于 Python、Gradio 和 OpenAI 兼容 API 的 Shell �
 
 ## 本次完善
 
+新增 [转换改进与第三轮实测](docs/CONVERSION_V3.md)：Qwen2.5-1.5B-Instruct + FP16 LoRA、197 条训练样本、保守转换规则及独立记录的原始/应用成绩。
+
 新增双栏分析工作台、会话历史恢复、Markdown/JSON 文件下载、可选登录、Docker 部署和本地基础模型/LoRA 推理入口。具体操作见 [启动与演示手册](docs/DEPLOYMENT.md)。学校 GPU 服务器上的部署与微调流程见 [学校服务器操作指南](docs/SCHOOL_SERVER.md)。
 
 实际完成的 AutoDL 训练与部署见 [运行管理说明](docs/AUTODL_DEPLOYED.md) 和 [真实评估与截图](artifacts/autodl/README.md)。
+
+## 公网演示
+
+[打开 ShellGuard AI](https://dba4c1843b5dd71ba0.gradio.live) · [二维码与真实截图](artifacts/public/README.md)。需要现有 Web 登录口令。Gradio 临时链接约一周有效，实例必须保持运行，重启后地址可能变化。
 
 ## 启动
 

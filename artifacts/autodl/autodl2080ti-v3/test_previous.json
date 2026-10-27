@@ -1,0 +1,1112 @@
+{
+  "model": "/root/autodl-tmp/models/Qwen2.5-0.5B-Instruct",
+  "adapter": "training_outputs/autodl2080ti-v2/lora/final_adapter",
+  "precision": "torch.float16",
+  "load_in_4bit": false,
+  "max_new_tokens": 1024,
+  "eval_sha256": "c40cfc7478c23cf297708476ff6cc33be7dedbfeea5430fd04393bb02579dab0",
+  "total": 32,
+  "valid_json_count": 29,
+  "valid_json_rate": 0.90625,
+  "risk_correct_count": 14,
+  "risk_accuracy": 0.4375,
+  "conversion_total": 32,
+  "conversion_correct_count": 2,
+  "conversion_exact_match": 0.0625,
+  "records": [
+    {
+      "request": {
+        "command": "cat 'holdout budget.txt'",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "读取指定文本文件的内容。",
+        "converted_command": "Get-Content -LiteralPath 'holdout budget.txt'",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"读取包含文本内容的文件。\", \"converted_command\": \"Get-Content -Path 'holdout budget.txt', -Encoding ASCII\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"编码和字符集可能影响输出。\"], \"validation_suggestions\": [\"检查目标文件是否以正确的编码保存，并确认路径正确。\"]}",
+      "parsed": {
+        "explanation": "读取包含文本内容的文件。",
+        "converted_command": "Get-Content -Path 'holdout budget.txt', -Encoding ASCII",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "编码和字符集可能影响输出。"
+        ],
+        "validation_suggestions": [
+          "检查目标文件是否以正确的编码保存，并确认路径正确。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "cat 'holdout budget.txt'",
+        "source_shell": "Bash",
+        "target_shell": "CMD",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "读取指定文本文件的内容。",
+        "converted_command": "type \"holdout budget.txt\"",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"读取包含 holdout budget.txt 的文本内容。\", \"converted_command\": \"cat holdout budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"文本编码和分隔符可能不同。\"], \"validation_suggestions\": [\"检查文件实际内容并明确目标输出格式。\"]}",
+      "parsed": {
+        "explanation": "读取包含 holdout budget.txt 的文本内容。",
+        "converted_command": "cat holdout budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "文本编码和分隔符可能不同。"
+        ],
+        "validation_suggestions": [
+          "检查文件实际内容并明确目标输出格式。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "Get-Content -LiteralPath 'holdout budget.txt'",
+        "source_shell": "PowerShell",
+        "target_shell": "Bash",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "读取指定文本文件的内容。",
+        "converted_command": "cat 'holdout budget.txt'",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"从 holdout budget.txt 获取内容。\", \"converted_command\": \"cat holdout budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"文件编码和分隔符可能不同。\"], \"validation_suggestions\": [\"检查目标文件是否包含预期内容，并确认目标路径正确。\"]}",
+      "parsed": {
+        "explanation": "从 holdout budget.txt 获取内容。",
+        "converted_command": "cat holdout budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "文件编码和分隔符可能不同。"
+        ],
+        "validation_suggestions": [
+          "检查目标文件是否包含预期内容，并确认目标路径正确。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "Get-Content -LiteralPath 'holdout budget.txt'",
+        "source_shell": "PowerShell",
+        "target_shell": "CMD",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "读取指定文本文件的内容。",
+        "converted_command": "type \"holdout budget.txt\"",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"从 holdout budget.txt 获取内容。\", \"converted_command\": \"Get-content holdout budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"文件编码和分隔符可能不同。\"], \"validation_suggestions\": [\"检查文件实际内容并明确目标输出格式。\"]}",
+      "parsed": {
+        "explanation": "从 holdout budget.txt 获取内容。",
+        "converted_command": "Get-content holdout budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "文件编码和分隔符可能不同。"
+        ],
+        "validation_suggestions": [
+          "检查文件实际内容并明确目标输出格式。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "type \"holdout budget.txt\"",
+        "source_shell": "CMD",
+        "target_shell": "Bash",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "读取指定文本文件的内容。",
+        "converted_command": "cat 'holdout budget.txt'",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将文件内容显示在终端窗口。\", \"converted_command\": \"cat holdout budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"输出类型和编码可能因终端和 shell 内核而异。\"], \"validation_suggestions\": [\"先查看实际输出并确认目标文件名。\"]}",
+      "parsed": {
+        "explanation": "将文件内容显示在终端窗口。",
+        "converted_command": "cat holdout budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "输出类型和编码可能因终端和 shell 内核而异。"
+        ],
+        "validation_suggestions": [
+          "先查看实际输出并确认目标文件名。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "type \"holdout budget.txt\"",
+        "source_shell": "CMD",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "读取指定文本文件的内容。",
+        "converted_command": "Get-Content -LiteralPath 'holdout budget.txt'",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将文件内容显示为文本类型。\", \"converted_command\": \"Get-Content -Path holdout -Raw\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"文本输出与原始文件不同，且包含编码信息。\"], \"validation_suggestions\": [\"检查目标文件是否以 UTF-8 编码保存，并确认文本大小和编码。\"]}",
+      "parsed": {
+        "explanation": "将文件内容显示为文本类型。",
+        "converted_command": "Get-Content -Path holdout -Raw",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "文本输出与原始文件不同，且包含编码信息。"
+        ],
+        "validation_suggestions": [
+          "检查目标文件是否以 UTF-8 编码保存，并确认文本大小和编码。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "cp 'holdout budget.txt' 'backup_holdout budget.txt'",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "复制指定文件到目标名称，目标已存在时可能覆盖。",
+        "converted_command": "Copy-Item -LiteralPath 'holdout budget.txt' -Destination 'backup_holdout budget.txt'",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"复制文件内容，目标文件名是备份目标。\", \"converted_command\": \"Copy-Item -Path 'holdout budget.txt' -Destination 'backup_holdout budget.txt'\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"源文件包含敏感信息，目标文件名受保护。\"], \"validation_suggestions\": [\"确认目标文件不存在且路径正确。\"]}",
+      "parsed": {
+        "explanation": "复制文件内容，目标文件名是备份目标。",
+        "converted_command": "Copy-Item -Path 'holdout budget.txt' -Destination 'backup_holdout budget.txt'",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "源文件包含敏感信息，目标文件名受保护。"
+        ],
+        "validation_suggestions": [
+          "确认目标文件不存在且路径正确。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "cp 'holdout budget.txt' 'backup_holdout budget.txt'",
+        "source_shell": "Bash",
+        "target_shell": "CMD",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "复制指定文件到目标名称，目标已存在时可能覆盖。",
+        "converted_command": "copy \"holdout budget.txt\" \"backup_holdout budget.txt\"",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"复制 holdout budget.txt 到 backup_holdout budget.txt。\", \"converted_command\": \"copy holdout budget.txt backup_holdout budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"目标文件名受压缩策略影响，且 cp 不保证源文件被正确解压。\"], \"validation_suggestions\": [\"检查目标文件是否存在，并确认压缩类型与预期一致。\"]}",
+      "parsed": {
+        "explanation": "复制 holdout budget.txt 到 backup_holdout budget.txt。",
+        "converted_command": "copy holdout budget.txt backup_holdout budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "目标文件名受压缩策略影响，且 cp 不保证源文件被正确解压。"
+        ],
+        "validation_suggestions": [
+          "检查目标文件是否存在，并确认压缩类型与预期一致。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "Copy-Item -LiteralPath 'holdout budget.txt' -Destination 'backup_holdout budget.txt'",
+        "source_shell": "PowerShell",
+        "target_shell": "Bash",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "复制指定文件到目标名称，目标已存在时可能覆盖。",
+        "converted_command": "cp 'holdout budget.txt' 'backup_holdout budget.txt'",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"复制文件 holdout budget.txt 到 backup_holdout budget.txt。\", \"converted_command\": \"cp holdout budget.txt backup_holdout budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"目标文件名和源项名称在实际操作中可能会有所不同。\"], \"validation_suggestions\": [\"确认目标文件夹和原始文件位置，且尽量使用同名目标文件。\"]}",
+      "parsed": {
+        "explanation": "复制文件 holdout budget.txt 到 backup_holdout budget.txt。",
+        "converted_command": "cp holdout budget.txt backup_holdout budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "目标文件名和源项名称在实际操作中可能会有所不同。"
+        ],
+        "validation_suggestions": [
+          "确认目标文件夹和原始文件位置，且尽量使用同名目标文件。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "Copy-Item -LiteralPath 'holdout budget.txt' -Destination 'backup_holdout budget.txt'",
+        "source_shell": "PowerShell",
+        "target_shell": "CMD",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "复制指定文件到目标名称，目标已存在时可能覆盖。",
+        "converted_command": "copy \"holdout budget.txt\" \"backup_holdout budget.txt\"",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"复制文件 holdout budget.txt 到 backup_holdout budget.txt。\", \"converted_command\": \"copy 'holdout budget.txt' 'backup_holdout budget.txt'\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"目标文件名和源文件名在编码和大小上可能不同。\"], \"validation_suggestions\": [\"确认目标文件存在且包含预期内容。\"]}",
+      "parsed": {
+        "explanation": "复制文件 holdout budget.txt 到 backup_holdout budget.txt。",
+        "converted_command": "copy 'holdout budget.txt' 'backup_holdout budget.txt'",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "目标文件名和源文件名在编码和大小上可能不同。"
+        ],
+        "validation_suggestions": [
+          "确认目标文件存在且包含预期内容。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "copy \"holdout budget.txt\" \"backup_holdout budget.txt\"",
+        "source_shell": "CMD",
+        "target_shell": "Bash",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "复制指定文件到目标名称，目标已存在时可能覆盖。",
+        "converted_command": "cp 'holdout budget.txt' 'backup_holdout budget.txt'",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"复制 holdout 文件内容到 backup_holdout 文件。\", \"converted_command\": \"cp holdout budget.txt backup_holdout budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"目标文件名受主机和权限影响。\"], \"validation_suggestions\": [\"检查目标文件是否存在且不是空。\"]}",
+      "parsed": {
+        "explanation": "复制 holdout 文件内容到 backup_holdout 文件。",
+        "converted_command": "cp holdout budget.txt backup_holdout budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "目标文件名受主机和权限影响。"
+        ],
+        "validation_suggestions": [
+          "检查目标文件是否存在且不是空。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "copy \"holdout budget.txt\" \"backup_holdout budget.txt\"",
+        "source_shell": "CMD",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "复制指定文件到目标名称，目标已存在时可能覆盖。",
+        "converted_command": "Copy-Item -LiteralPath 'holdout budget.txt' -Destination 'backup_holdout budget.txt'",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"复制 holdout 文件内容到 backup_holdout 文件。\", \"converted_command\": \"Copy-Item -Path 'holdout' -Destination 'backup_holdout'\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"源文件包含敏感信息，目标路径也应保护。\"], \"validation_suggestions\": [\"在目标位置进行本地备份并检查。\"]}",
+      "parsed": {
+        "explanation": "复制 holdout 文件内容到 backup_holdout 文件。",
+        "converted_command": "Copy-Item -Path 'holdout' -Destination 'backup_holdout'",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "源文件包含敏感信息，目标路径也应保护。"
+        ],
+        "validation_suggestions": [
+          "在目标位置进行本地备份并检查。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "mv 'holdout budget.txt' 'backup_holdout budget.txt'",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "移动或重命名指定文件，需核对目标是否已存在。",
+        "converted_command": "Move-Item -LiteralPath 'holdout budget.txt' -Destination 'backup_holdout budget.txt'",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将 holdout budget.txt 移动到 backup_holdout budget.txt。\", \"converted_command\": \"New-Item -ItemType Directory -Path 'backup_holdout budget.txt' | Rename-Item -NewName 'holdout budget.txt'.\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"目标文件名和位置受 Windows 文件系统规则影响。\"], \"validation_suggestions\": [\"确认目标文件不存在且目标路径正确。\"]}",
+      "parsed": {
+        "explanation": "将 holdout budget.txt 移动到 backup_holdout budget.txt。",
+        "converted_command": "New-Item -ItemType Directory -Path 'backup_holdout budget.txt' | Rename-Item -NewName 'holdout budget.txt'.",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "目标文件名和位置受 Windows 文件系统规则影响。"
+        ],
+        "validation_suggestions": [
+          "确认目标文件不存在且目标路径正确。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "mv 'holdout budget.txt' 'backup_holdout budget.txt'",
+        "source_shell": "Bash",
+        "target_shell": "CMD",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "移动或重命名指定文件，需核对目标是否已存在。",
+        "converted_command": "move \"holdout budget.txt\" \"backup_holdout budget.txt\"",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将 holdout budget.txt 移动到 backup_holdout budget.txt。\", \"converted_command\": \"mv holdout budget.txt backup_holdout budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"目标文件名和源文件名在传输过程中可能会发生变化。\"], \"validation_suggestions\": [\"确认目标文件夹和原始文件位置，且移动前进行备份。\"]}",
+      "parsed": {
+        "explanation": "将 holdout budget.txt 移动到 backup_holdout budget.txt。",
+        "converted_command": "mv holdout budget.txt backup_holdout budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "目标文件名和源文件名在传输过程中可能会发生变化。"
+        ],
+        "validation_suggestions": [
+          "确认目标文件夹和原始文件位置，且移动前进行备份。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "Move-Item -LiteralPath 'holdout budget.txt' -Destination 'backup_holdout budget.txt'",
+        "source_shell": "PowerShell",
+        "target_shell": "Bash",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "移动或重命名指定文件，需核对目标是否已存在。",
+        "converted_command": "mv 'holdout budget.txt' 'backup_holdout budget.txt'",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将 holdout budget.txt 移动到 backup_holdout budget.txt 备份位置。\", \"converted_command\": \"cp -pR holdout budget.txt backup_holdout budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"目标文件名和源项名称可能不同，且 cp 命令对隐藏文件和符号链接支持有限。\"], \"validation_suggestions\": [\"确认目标文件夹和备份路径正确，并检查目标文件是否被占用。\"]}",
+      "parsed": {
+        "explanation": "将 holdout budget.txt 移动到 backup_holdout budget.txt 备份位置。",
+        "converted_command": "cp -pR holdout budget.txt backup_holdout budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "目标文件名和源项名称可能不同，且 cp 命令对隐藏文件和符号链接支持有限。"
+        ],
+        "validation_suggestions": [
+          "确认目标文件夹和备份路径正确，并检查目标文件是否被占用。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "Move-Item -LiteralPath 'holdout budget.txt' -Destination 'backup_holdout budget.txt'",
+        "source_shell": "PowerShell",
+        "target_shell": "CMD",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "移动或重命名指定文件，需核对目标是否已存在。",
+        "converted_command": "move \"holdout budget.txt\" \"backup_holdout budget.txt\"",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将 holdout budget.txt 移动到 backup_holdout budget.txt 备份位置。\", \"converted_command\": \"move holdout budget.txt backup_holdout budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"目标文件名和源项名称可能不同，且移动行为受多种因素影响。\"], \"validation_suggestions\": [\"确认目标文件夹和备份路径正确，并检查源项内容是否完整。\"]}",
+      "parsed": {
+        "explanation": "将 holdout budget.txt 移动到 backup_holdout budget.txt 备份位置。",
+        "converted_command": "move holdout budget.txt backup_holdout budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "目标文件名和源项名称可能不同，且移动行为受多种因素影响。"
+        ],
+        "validation_suggestions": [
+          "确认目标文件夹和备份路径正确，并检查源项内容是否完整。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "move \"holdout budget.txt\" \"backup_holdout budget.txt\"",
+        "source_shell": "CMD",
+        "target_shell": "Bash",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "移动或重命名指定文件，需核对目标是否已存在。",
+        "converted_command": "mv 'holdout budget.txt' 'backup_holdout budget.txt'",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将 holdout budget.txt 移动到 backup_holdout budget.txt。\", \"converted_command\": \"mv holdout budget.txt backup_holdout budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"目标文件名和源文件名在传输过程中可能会发生变化。\"], \"validation_suggestions\": [\"检查目标文件是否存在且不是空。\"]}",
+      "parsed": {
+        "explanation": "将 holdout budget.txt 移动到 backup_holdout budget.txt。",
+        "converted_command": "mv holdout budget.txt backup_holdout budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "目标文件名和源文件名在传输过程中可能会发生变化。"
+        ],
+        "validation_suggestions": [
+          "检查目标文件是否存在且不是空。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "move \"holdout budget.txt\" \"backup_holdout budget.txt\"",
+        "source_shell": "CMD",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "移动或重命名指定文件，需核对目标是否已存在。",
+        "converted_command": "Move-Item -LiteralPath 'holdout budget.txt' -Destination 'backup_holdout budget.txt'",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将 holdout budget.txt 移动到 backup_holdout budget.txt。\", \"converted_command\": \"New-Item -ItemType Directory -Path 'C:\\temp\\backup_holdout' | Rename-Item -NewName 'holdout budget.txt', Move-Item -Destination 'C:\\temp\\backup_holdout' -Force.\", \"risk_level\": \"medium\", \"risk_reasons\": [\"目标文件夹已存在且非空。\", \"移动和重命名过程可能损坏现有内容。\"], \"semantic_differences\": [\"源和目标文件名、位置和权限可能不同。\"], \"validation_suggestions\": [\"检查目标文件夹是否存在，并明确指出目标用途。\"]}",
+      "parsed": {
+        "explanation": "将 holdout budget.txt 移动到 backup_holdout budget.txt。",
+        "converted_command": "New-Item -ItemType Directory -Path 'C:\temp\backup_holdout' | Rename-Item -NewName 'holdout budget.txt', Move-Item -Destination 'C:\temp\backup_holdout' -Force.",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "目标文件夹已存在且非空。",
+          "移动和重命名过程可能损坏现有内容。"
+        ],
+        "semantic_differences": [
+          "源和目标文件名、位置和权限可能不同。"
+        ],
+        "validation_suggestions": [
+          "检查目标文件夹是否存在，并明确指出目标用途。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "mkdir 'holdout budget.txt'",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "创建指定目录。",
+        "converted_command": "New-Item -ItemType Directory -Path 'holdout budget.txt'",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"在当前目录创建名为 holdout 的隐藏文件夹，包含 budget.txt。\", \"converted_command\": \"New-Item -ItemType Directory -Path 'C:\\holdout\\budget.txt' -Force | Out-Null\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"目标路径是字符串，而非实际文件对象。\"], \"validation_suggestions\": [\"确认目标路径是否正确且预算文件不存在。\"]}",
+      "parsed": null,
+      "error": "模型返回格式异常：需要完整 JSON、规定的风险等级及全部必填字段；请重试或检查模型兼容性。"
+    },
+    {
+      "request": {
+        "command": "mkdir 'holdout budget.txt'",
+        "source_shell": "Bash",
+        "target_shell": "CMD",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "创建指定目录。",
+        "converted_command": "mkdir \"holdout budget.txt\"",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"创建隐藏文件 holdout budget.txt。\", \"converted_command\": \"mktemp -d | cat > holdout budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"隐藏文件名和位置受 shell 内核控制。\"], \"validation_suggestions\": [\"检查隐藏文件是否包含敏感信息，并在非隐藏情况下谨慎处理。\"]}",
+      "parsed": {
+        "explanation": "创建隐藏文件 holdout budget.txt。",
+        "converted_command": "mktemp -d | cat > holdout budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "隐藏文件名和位置受 shell 内核控制。"
+        ],
+        "validation_suggestions": [
+          "检查隐藏文件是否包含敏感信息，并在非隐藏情况下谨慎处理。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "New-Item -ItemType Directory -Path 'holdout budget.txt'",
+        "source_shell": "PowerShell",
+        "target_shell": "Bash",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "创建指定目录。",
+        "converted_command": "mkdir 'holdout budget.txt'",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"创建一个名为 holdout budget.txt 的新文件，类型为目录。\", \"converted_command\": \"mkdir -p holdout/budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"Windows 文件名前缀与 Linux 相同，但大小写敏感性不同。\"], \"validation_suggestions\": [\"检查目标文件是否存在，并确保其父目录存在且可读。\"]}",
+      "parsed": {
+        "explanation": "创建一个名为 holdout budget.txt 的新文件，类型为目录。",
+        "converted_command": "mkdir -p holdout/budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "Windows 文件名前缀与 Linux 相同，但大小写敏感性不同。"
+        ],
+        "validation_suggestions": [
+          "检查目标文件是否存在，并确保其父目录存在且可读。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "New-Item -ItemType Directory -Path 'holdout budget.txt'",
+        "source_shell": "PowerShell",
+        "target_shell": "CMD",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "创建指定目录。",
+        "converted_command": "mkdir \"holdout budget.txt\"",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"创建一个名为 holdout budget.txt 的新文件项，类型为目录。\", \"converted_command\": null, \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"Windows 文件名长度限制和编码方式可能不同。\"], \"validation_suggestions\": [\"确认目标路径是否正确且不存在。\"]}",
+      "parsed": {
+        "explanation": "创建一个名为 holdout budget.txt 的新文件项，类型为目录。",
+        "converted_command": null,
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "Windows 文件名长度限制和编码方式可能不同。"
+        ],
+        "validation_suggestions": [
+          "确认目标路径是否正确且不存在。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "mkdir \"holdout budget.txt\"",
+        "source_shell": "CMD",
+        "target_shell": "Bash",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "创建指定目录。",
+        "converted_command": "mkdir 'holdout budget.txt'",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"创建隐藏文件 holdout budget.txt。\", \"converted_command\": \"mkdir -p holdout/budget.txt\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"隐藏文件名和位置受 shell 特性影响，且默认行为可能与实际用途不符。\"], \"validation_suggestions\": [\"先在目标环境中检查隐藏文件是否被正确创建，并确认隐藏属性。\"]}",
+      "parsed": {
+        "explanation": "创建隐藏文件 holdout budget.txt。",
+        "converted_command": "mkdir -p holdout/budget.txt",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "隐藏文件名和位置受 shell 特性影响，且默认行为可能与实际用途不符。"
+        ],
+        "validation_suggestions": [
+          "先在目标环境中检查隐藏文件是否被正确创建，并确认隐藏属性。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "mkdir \"holdout budget.txt\"",
+        "source_shell": "CMD",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "创建指定目录。",
+        "converted_command": "New-Item -ItemType Directory -Path 'holdout budget.txt'",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "可能改变文件系统；需确认目录及目标是否已存在。"
+        ],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"在当前目录创建名为 holdout 的隐藏文件夹，并设置其内容为 budget.txt。\", \"converted_command\": \"New-Item -ItemType Directory -Path 'C:\\\\holdout\\\\budget.txt' | Out-Null; Set-Content -Path 'C:\\\\holdout\\\\budget.txt' -Value \\\"\" + \"Hello World!\" + \"\\\".NET\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"隐藏文件夹的行为因操作系统而异。\"], \"validation_suggestions\": [\"检查目标文件是否存在，并确保没有其他程序正在修改该位置。\"]}",
+      "parsed": null,
+      "error": "模型返回格式异常：需要完整 JSON、规定的风险等级及全部必填字段；请重试或检查模型兼容性。"
+    },
+    {
+      "request": {
+        "command": "echo holdout",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "输出给定文本。",
+        "converted_command": "Write-Output holdout",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将字符串 'holdout' 显示为二进制形式。\", \"converted_command\": \"Get-Holdout\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"PowerShell 不支持二进制输出。\"], \"validation_suggestions\": [\"在受控环境中尝试并确认输出类型。\"]}",
+      "parsed": {
+        "explanation": "将字符串 'holdout' 显示为二进制形式。",
+        "converted_command": "Get-Holdout",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "PowerShell 不支持二进制输出。"
+        ],
+        "validation_suggestions": [
+          "在受控环境中尝试并确认输出类型。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "echo holdout",
+        "source_shell": "Bash",
+        "target_shell": "CMD",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "输出给定文本。",
+        "converted_command": "echo holdout",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将字符串 'holdout' 显示为二进制形式。\", \"converted_command\": null, \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"输出格式和大小可能因终端而异。\"], \"validation_suggestions\": [\"在目标环境中检查并理解二进制输出。\"]}",
+      "parsed": {
+        "explanation": "将字符串 'holdout' 显示为二进制形式。",
+        "converted_command": null,
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "输出格式和大小可能因终端而异。"
+        ],
+        "validation_suggestions": [
+          "在目标环境中检查并理解二进制输出。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "Write-Output holdout",
+        "source_shell": "PowerShell",
+        "target_shell": "Bash",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "输出给定文本。",
+        "converted_command": "echo holdout",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将字符串 'holdout' 写入当前控制台输出流。\", \"converted_command\": \"echo holdout\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"PowerShell 的 Write-Output 默认以反斜杠结尾，而 Bash 的标准输出是无尾的。\"], \"validation_suggestions\": [\"在目标环境中检查并确认当前控制台行为。\"]}",
+      "parsed": {
+        "explanation": "将字符串 'holdout' 写入当前控制台输出流。",
+        "converted_command": "echo holdout",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "PowerShell 的 Write-Output 默认以反斜杠结尾，而 Bash 的标准输出是无尾的。"
+        ],
+        "validation_suggestions": [
+          "在目标环境中检查并确认当前控制台行为。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "Write-Output holdout",
+        "source_shell": "PowerShell",
+        "target_shell": "CMD",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "输出给定文本。",
+        "converted_command": "echo holdout",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将字符串 'holdout' 写入当前控制台输出流。\", \"converted_command\": null, \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"Windows 环境中的 output 属性与 PowerShell 不同，且写入行为受 Windows 控制。\"], \"validation_suggestions\": [\"在目标环境中检查并理解当前输出行为。\"]}",
+      "parsed": {
+        "explanation": "将字符串 'holdout' 写入当前控制台输出流。",
+        "converted_command": null,
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "Windows 环境中的 output 属性与 PowerShell 不同，且写入行为受 Windows 控制。"
+        ],
+        "validation_suggestions": [
+          "在目标环境中检查并理解当前输出行为。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "echo holdout",
+        "source_shell": "CMD",
+        "target_shell": "Bash",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "输出给定文本。",
+        "converted_command": "echo holdout",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将字符串 'holdout' 显示为 ASCII 码流。\", \"converted_command\": null, \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"输出类型和编码可能因终端而异。\"], \"validation_suggestions\": [\"检查目标系统的标准输出编码，并在需要时进行本地编码转换。\"]}",
+      "parsed": {
+        "explanation": "将字符串 'holdout' 显示为 ASCII 码流。",
+        "converted_command": null,
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "输出类型和编码可能因终端而异。"
+        ],
+        "validation_suggestions": [
+          "检查目标系统的标准输出编码，并在需要时进行本地编码转换。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "echo holdout",
+        "source_shell": "CMD",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "输出给定文本。",
+        "converted_command": "Write-Output holdout",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将字符串 'holdout' 显示为二进制形式。\", \"converted_command\": \"Get-Holdout\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"Windows 95/98/NT/2000/XP 等支持文本输出，但 PowerShell 不支持二进制显示。\"], \"validation_suggestions\": [\"确认目标路径是否正确，并在 Windows 上检查错误信息。\"]}",
+      "parsed": {
+        "explanation": "将字符串 'holdout' 显示为二进制形式。",
+        "converted_command": "Get-Holdout",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "Windows 95/98/NT/2000/XP 等支持文本输出，但 PowerShell 不支持二进制显示。"
+        ],
+        "validation_suggestions": [
+          "确认目标路径是否正确，并在 Windows 上检查错误信息。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "  ls  ",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "列出当前目录的项目。",
+        "converted_command": "Get-ChildItem",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"列出当前目录内容。\", \"converted_command\": \"Get-ChildItem -Path \"\" | Select-Object Name, Type, FullName, Length, LastWriteTime, LastAccessTime, CreationTime, Size, LastWriteInfo, LastAccessInfo, LastCommitInfo, ErrorControl, DirectoryInfo, FullName, IsDirectory, IsFile, Inherited, ParentItem, ParentName, ParentPath, ParentType, ParentVolumeInformation, ParentVolumeName, ParentVolumeType, ParentVolumeSize, ParentVolumeFreeSpace, ParentVolumeStatus, ParentVolumeCreationTime, ParentVolumeChangeTime, ParentVolumeLastAccessTime, ParentVolumeLastWriteTime, ParentVolumeAttributes, ParentVolumeSecurityInfo, ParentVolumePermissionsInfo, ParentVolumeVolumeInfo, ParentVolumeVolumeName, ParentVolumeVolumeType, ParentVolumeVolumeSize, ParentVolumeVolumeFreeSpace, ParentVolumeVolumeStatus, ParentVolumeVolumeCreationTime, ParentVolumeVolumeChangeTime, ParentVolumeVolumeLastAccessTime, ParentVolumeVolumeLastWriteTime, ParentVolumeVolumeAttributes, ParentVolumeVolumeSecurityInfo, ParentVolumeVolumePermissionsInfo, ParentVolumeVolumeVolumeInfo, ParentVolumeVolumeVolumeName, ParentVolumeVolumeVolumeType, ParentVolumeVolumeVolumeSize, ParentVolumeVolumeVolumeFreeSpace, ParentVolumeVolumeVolumeStatus, ParentVolumeVolumeVolumeCreationTime, ParentVolumeVolumeVolumeChangeTime, ParentVolumeVolumeVolumeLastAccessTime, ParentVolumeVolumeVolumeLastWriteTime, ParentVolumeVolumeVolumeAttributes, ParentVolumeVolumeVolumeSecurityInfo, ParentVolumeVolumeVolumePermissionsInfo, ParentVolumeVolumeVolumeVolumeInfo, ParentVolumeVolumeVolumeVolumeName, ParentVolumeVolumeVolumeVolumeType, ParentVolumeVolumeVolumeVolumeSize, ParentVolumeVolumeVolumeVolumeFreeSpace, ParentVolumeVolumeVolumeVolumeStatus, ParentVolumeVolumeVolumeVolumeCreationTime, ParentVolumeVolumeVolumeVolumeChangeTime, ParentVolumeVolumeVolumeVolumeLastAccessTime, ParentVolumeVolumeVolumeVolumeLastWriteTime, ParentVolumeVolumeVolumeVolumeAttributes, ParentVolumeVolumeVolumeVolumeSecurityInfo, ParentVolumeVolumeVolumeVolumePermissionsInfo, ParentVolumeVolumeVolumeVolumeVolumeInfo, ParentVolumeVolumeVolumeVolumeVolumeName, ParentVolumeVolumeVolumeVolumeVolumeType, ParentVolumeVolumeVolumeVolumeVolumeSize, ParentVolumeVolumeVolumeVolumeVolumeFreeSpace, ParentVolumeVolumeVolumeVolumeVolumeStatus, ParentVolumeVolumeVolumeVolumeVolumeCreationTime, ParentVolumeVolumeVolumeVolumeVolumeChangeTime, ParentVolumeVolumeVolumeVolumeVolumeLastAccessTime, ParentVolumeVolumeVolumeVolumeVolumeLastWriteTime, ParentVolumeVolumeVolumeVolumeVolumeAttributes, ParentVolumeVolumeVolumeVolumeVolumeSecurityInfo, ParentVolumeVolumeVolumeVolumeVolumePermissionsInfo, ParentVolumeVolumeVolumeVolumeVolumeVolumeInfo, ParentVolumeVolumeVolumeVolumeVolumeVolumeName, ParentVolumeVolumeVolumeVolumeVolumeVolumeType, ParentVolumeVolumeVolumeVolumeVolumeVolumeSize, ParentVolumeVolumeVolumeVolumeVolumeVolumeFreeSpace, ParentVolumeVolumeVolumeVolumeVolumeVolumeStatus, ParentVolumeVolumeVolumeVolumeVolumeVolumeCreationTime, ParentVolumeVolumeVolumeVolumeVolumeVolumeChangeTime, ParentVolumeVolumeVolumeVolumeVolumeVolumeLastAccessTime, ParentVolumeVolumeVolumeVolumeVolumeVolumeLastWriteTime, ParentVolumeVolumeVolumeVolumeVolumeVolumeAttributes, ParentVolumeVolumeVolumeVolumeVolumeVolumeSecurityInfo, ParentVolumeVolumeVolumeVolumeVolumeVolumePermissionsInfo, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeInfo, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeName, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeType, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeSize, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeFreeSpace, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeStatus, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeCreationTime, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeChangeTime, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeLastAccessTime, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeLastWriteTime, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeAttributes, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeSecurityInfo, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumePermissionsInfo, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeInfo, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeName, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeType, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeSize, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeFreeSpace, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeStatus, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeCreationTime, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeChangeTime, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeLastAccessTime, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeLastWriteTime, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeAttributes, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeSecurityInfo, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumePermissionsInfo, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeInfo, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeName, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeType, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeSize, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeFreeSpace, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeStatus, ParentVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolumeVolume",
+      "parsed": null,
+      "error": "模型返回格式异常：需要完整 JSON、规定的风险等级及全部必填字段；请重试或检查模型兼容性。"
+    },
+    {
+      "request": {
+        "command": "  pwd  ",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "显示当前工作目录。",
+        "converted_command": "Get-Location",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "转换对应常见用途；输出格式、文本编码、隐藏项及覆盖交互可能不同，不保证字节级等价。"
+        ],
+        "validation_suggestions": [
+          "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"输出当前工作目录。\", \"converted_command\": \"Get-Location\", \"risk_level\": \"low\", \"risk_reasons\": [], \"semantic_differences\": [\"目标路径可能包含隐藏文件和符号链接。\"], \"validation_suggestions\": [\"确认当前工作目录并检查是否需要递归访问。\"]}",
+      "parsed": {
+        "explanation": "输出当前工作目录。",
+        "converted_command": "Get-Location",
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "目标路径可能包含隐藏文件和符号链接。"
+        ],
+        "validation_suggestions": [
+          "确认当前工作目录并检查是否需要递归访问。"
+        ]
+      },
+      "error": null
+    }
+  ]
+}

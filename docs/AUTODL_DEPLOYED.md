@@ -1,9 +1,18 @@
 # AutoDL 实际部署操作说明
 
-项目目录：`/root/autodl-tmp/shellguard-ai`。模型目录：`/root/autodl-tmp/models/Qwen2.5-0.5B-Instruct`。
-当前 Web 使用 `training_outputs/autodl2080ti-v2/lora/final_adapter`，监听 `0.0.0.0:6006`，由独立 Supervisor 进程管理。登录用户名为 `student`，随机生成的密码仅保存在服务器 `.env`，文件权限为 600。
+项目目录：`/root/autodl-tmp/shellguard-ai`。模型目录：`/root/autodl-tmp/models/Qwen2.5-1.5B-Instruct`。
+当前 Web 使用 `training_outputs/autodl2080ti-v3/lora/final_adapter`，监听 `0.0.0.0:6006`，由独立 Supervisor 进程管理。登录用户名为 `student`，随机生成的密码仅保存在服务器 `.env`，文件权限为 600。
 
 ## 访问
+
+**已验证公网地址（2026-10-27）：https://dba4c1843b5dd71ba0.gradio.live**
+
+[二维码 PNG](../artifacts/public/shellguard-qr.png) · [二维码 SVG](../artifacts/public/shellguard-qr.svg) · [公网验收记录](../artifacts/public/verification.json)
+
+不需要建立 SSH 隧道即可访问。用户名仍为 `student`，沿用现有 Web 密码。公网浏览器已验证登录、本地模型分析、带空格文件名转换、严重风险提示和 JSON 下载。
+
+这是 Gradio 临时分享链接，官方说明有效期约 1 周；实例必须保持运行，应用重启后链接可能变化。它不是永久域名。到期或重启后从 `logs/web.log` 查找最新 `Running on public URL`，重新生成二维码；不要复用旧二维码。分享设置为 `.env` 中 `APP_SHARE=true`。若要长期固定入口，使用 AutoDL 控制台提供的 6006 自定义服务地址，或另配域名和反向代理。
+
 
 可以从 AutoDL 控制台打开该实例 6006 端口的“自定义服务”。实际公网映射地址由控制台提供，本次尚未验证该映射。
 
@@ -39,6 +48,17 @@ Supervisor 会在应用异常退出后重启应用；SSH 断开不会停止服�
 
 ## 实验材料
 
-第一轮 5 epoch，第二轮 20 epoch；第二轮最终使用验证损失最低的第 11 epoch checkpoint。完整记录见 [真实实验材料](../artifacts/autodl/README.md)。本次使用普通 LoRA 和 FP16，并非 4-bit QLoRA；没有调用远程模型 API。
+当前第三轮：Qwen2.5-1.5B-Instruct，197 条训练、18 条验证、32 条保留测试，5 epoch，选择 checkpoint-125。详见 [转换与微调说明](CONVERSION_V3.md)。历史第一轮 5 epoch、第二轮 20 epoch 的材料也完整保留。完整记录见 [真实实验材料](../artifacts/autodl/README.md)。本次使用普通 LoRA 和 FP16，并非 4-bit QLoRA；没有调用远程模型 API。
 
-服务器保留两轮模型和日志，额外备份文件为 `/root/autodl-tmp/shellguard-experiment-backup.tar.gz`。释放实例前应下载该文件；GitHub 中只保存轻量评估记录和截图，不保存 adapter 权重。
+服务器保留三轮模型和日志。前两轮备份为 `/root/autodl-tmp/shellguard-experiment-backup.tar.gz`，第三轮备份为 `/root/autodl-tmp/shellguard-v3-backup.tar.gz`。释放实例前应下载该文件；GitHub 中只保存轻量评估记录和截图，不保存 adapter 权重。
+
+## 公网组件与二维码复现
+
+本实例无法直接下载 Gradio 的 frpc 组件，因此从 Gradio 提示的官方地址 `https://cdn-media.huggingface.co/frpc-gradio-0.3/frpc_linux_amd64` 下载后上传，安装至 `/root/.cache/huggingface/gradio/frpc/frpc_linux_amd64_v0.3`，权限 755。该文件 SHA-256 为 `c791d1f047b41ff5885772fc4bf20b797c6059bbd82abb9e31de15e55d6a57c4`。未修改 TLS 校验，也未将组件或凭据提交 GitHub。
+
+```bash
+python -m pip install -r requirements-qr.txt
+python scripts/make_public_qr.py https://你的最新地址.gradio.live
+```
+
+二维码只编码网址，没有登录密码。可在教室展示二维码后单独告知老师 Web 登录口令。

@@ -48,7 +48,7 @@ def main() -> None:
 
     rows = []
     records = load_records(args.eval_file)
-    for record in records:
+    for index, record in enumerate(records, start=1):
         prompt_messages = build_training_messages(record.request, record.answer)[:-1]
         prompt = tokenizer.apply_chat_template(prompt_messages, tokenize=False, add_generation_prompt=True)
         inputs = tokenizer(prompt, return_tensors="pt", add_special_tokens=False).to(model.device)
@@ -65,6 +65,7 @@ def main() -> None:
             parsed = parse_model_response(raw)
         except ModelClientError as exc:
             error = str(exc)
+        print(f"Evaluated {index}/{len(records)}; valid_json={parsed is not None}", flush=True)
         rows.append({
             "request": record.request.model_dump(mode="json"),
             "expected": record.answer.model_dump(mode="json"),

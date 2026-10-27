@@ -1,5 +1,7 @@
 # AutoDL 真实训练与部署材料
 
+当前为第三轮 1.5B LoRA 版本，详见 [实测说明](../../docs/CONVERSION_V3.md)、[原始对比](autodl2080ti-v3/comparison.json) 和 [公网截图/二维码](../public/README.md)。以下为前两轮历史记录。
+
 2026-10-27 在单张 RTX 2080 Ti 11 GB 上运行。模型为 Qwen2.5-0.5B-Instruct，FP16 普通 LoRA，rank 8、alpha 16、学习率 2e-4、batch size 1、梯度累积 8。数据为 24 条训练和 8 条验证。
 
 | 指标 | 基础模型 | 5 epoch LoRA | 20 epoch LoRA |
@@ -8,7 +10,7 @@
 | 风险等级准确率 | 0% | 37.5% | 50% |
 | 转换精确匹配率 | 0% | 0% | 0% |
 
-第二轮重用第一轮的基础模型评估（同一模型、数据、FP16 与生成长度），没有重复生成基础成绩。两轮原始输出均保留。20 epoch 运行结束后，Trainer 按验证损失选中 checkpoint-33（第 11 epoch）作为 final_adapter，Web 部署使用该 adapter。
+第二轮重用第一轮的基础模型评估（同一模型、数据、FP16 与生成长度），没有重复生成基础成绩。两轮原始输出均保留。20 epoch 运行结束后，Trainer 按验证损失选中 checkpoint-33（第 11 epoch）作为 final_adapter，当时 Web 部署使用该 adapter，现已切换第三轮。
 
 验证集参与了 checkpoint 和部署版本选择，样本量也很小；以上不是独立测试集成绩。首轮 Web 中 ls 转换格式无效，第二轮 ls、rm -rf /、pwd 均返回有效结构化分析。转换精确匹配仍为 0，模型输出需要人工复核，不能宣称转换正确率已经达到可用标准。
 

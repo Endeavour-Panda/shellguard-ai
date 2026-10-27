@@ -1,0 +1,54 @@
+{
+  "eval_sha256": "c40cfc7478c23cf297708476ff6cc33be7dedbfeea5430fd04393bb02579dab0",
+  "before": {
+    "model": "/root/autodl-tmp/models/Qwen2.5-0.5B-Instruct",
+    "adapter": "training_outputs/autodl2080ti-v2/lora/final_adapter",
+    "raw_model": {
+      "total": 32,
+      "valid_json_count": 29,
+      "valid_json_rate": 0.90625,
+      "risk_correct_count": 14,
+      "risk_accuracy": 0.4375,
+      "conversion_total": 32,
+      "conversion_correct_count": 2,
+      "conversion_exact_match": 0.0625
+    },
+    "application_with_current_rules": {
+      "total": 32,
+      "valid_json_count": 29,
+      "valid_json_rate": 0.90625,
+      "risk_correct_count": 14,
+      "risk_accuracy": 0.4375,
+      "conversion_total": 32,
+      "conversion_correct_count": 29,
+      "conversion_exact_match": 0.90625
+    },
+    "rule_overrides": 29
+  },
+  "after": {
+    "model": "/root/autodl-tmp/models/Qwen2.5-1.5B-Instruct",
+    "adapter": "training_outputs/autodl2080ti-v3/lora/final_adapter",
+    "raw_model": {
+      "total": 32,
+      "valid_json_count": 32,
+      "valid_json_rate": 1.0,
+      "risk_correct_count": 32,
+      "risk_accuracy": 1.0,
+      "conversion_total": 32,
+      "conversion_correct_count": 7,
+      "conversion_exact_match": 0.21875
+    },
+    "application_with_current_rules": {
+      "total": 32,
+      "valid_json_count": 32,
+      "valid_json_rate": 1.0,
+      "risk_correct_count": 32,
+      "risk_accuracy": 1.0,
+      "conversion_total": 32,
+      "conversion_correct_count": 32,
+      "conversion_exact_match": 1.0
+    },
+    "rule_overrides": 32
+  },
+  "limitations": "32 synthetic in-family cases, exact command match. Invalid JSON counts as failure. New rules applied separately to BOTH models. No command executed. No evidence of general script equivalence."
+}

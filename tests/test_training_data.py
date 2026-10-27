@@ -31,3 +31,17 @@ def test_duplicate_and_leaked_examples_are_rejected(tmp_path):
     train_path.write_text(json.dumps(sample, ensure_ascii=False), encoding="utf-8")
     with pytest.raises(ValueError, match="泄漏"):
         validate_pair(train_path, eval_path)
+
+
+def test_conversion_splits_are_disjoint_and_match_recorded_hashes():
+    from pathlib import Path
+    from itertools import combinations
+    from training.validate_data import fingerprint
+    root = Path(__file__).resolve().parents[1] / 'data/conversion_v3'
+    manifest = json.loads((root/'manifest.json').read_text())
+    for name in ('train', 'validation', 'test'):
+        path = root/f'{name}.jsonl'
+        assert fingerprint(path) == manifest[name]['sha256']
+        assert len(load_records(path)) == manifest[name]['count']
+    for a,b in combinations(('train','validation','test'),2):
+        validate_pair(root/f'{a}.jsonl',root/f'{b}.jsonl')

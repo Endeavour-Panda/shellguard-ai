@@ -6,6 +6,7 @@ import os
 import re
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "False")
 
@@ -172,7 +173,7 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
             gr.Markdown("**离线演示** · 未调用大模型。12 组预置样例可体验完整流程，未知命令仅提供静态检测。")
         elif backend == "local":
             label = "LoRA 微调模型" if settings.local_adapter else "基础模型"
-            gr.Markdown(f"**本地推理 · {label}** · 首次分析需加载权重，CPU 推理可能较慢。")
+            gr.Markdown(f"**本地推理 · {label}** · {_plain(Path(settings.local_model).name)} · 首次分析需加载权重。")
         elif backend == "real":
             gr.Markdown(f"**在线模型 · {_plain(settings.model_name)}** · 调用状态以每次分析结果为准。")
         else:
@@ -232,5 +233,5 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
 if __name__ == "__main__":
     config = load_settings()
     auth = launch_auth(config)
-    create_app(config).launch(server_name=config.host, server_port=config.port, share=False,
+    create_app(config).launch(server_name=config.host, server_port=config.port, share=config.share,
                              auth=auth, show_error=False, max_threads=8)

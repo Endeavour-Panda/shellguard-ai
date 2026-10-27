@@ -1,0 +1,45 @@
+{
+  "request": {
+    "command": "rm -rf /",
+    "source_shell": "Bash",
+    "target_shell": "PowerShell",
+    "mode": "风险分析"
+  },
+  "backend": "local",
+  "model": {
+    "explanation": "删除指定文件夹及其内容，需谨慎核对目标。",
+    "converted_command": null,
+    "risk_level": "critical",
+    "risk_reasons": [
+      "可能造成数据丢失；需确认目录及子项是否已正确处理。"
+    ],
+    "semantic_differences": [
+      "输出格式、文本编码、隐藏项及覆盖交互可能不同；不保证字节级等价。"
+    ],
+    "validation_suggestions": [
+      "在隔离测试目录中人工核对文件名、工作目录、目标 Shell 版本及输出。"
+    ]
+  },
+  "conversion_source": "none",
+  "static_findings": [
+    {
+      "code": "deletion",
+      "level": "high",
+      "reason": "检测到删除命令或别名，可能造成不可恢复的数据丢失。",
+      "suggestion": "先列出精确目标并备份；PowerShell 可先检查 -WhatIf 的适用性。",
+      "origin": "input",
+      "statement_index": null
+    },
+    {
+      "code": "broad_delete",
+      "level": "critical",
+      "reason": "删除目标包含根目录、家目录或通配符，实际范围可能很大。",
+      "suggestion": "展开变量并人工核对绝对路径和匹配清单，勿对广泛目录直接操作。",
+      "origin": "input",
+      "statement_index": null
+    }
+  ],
+  "overall_risk": "critical",
+  "error": null,
+  "warning": "高风险警告：请暂停操作，先确认目标范围、变量实际值和备份。仅分析文本，从未执行命令。生成命令未经执行验证，请在目标 Shell 的隔离测试目录中人工核对。"
+}

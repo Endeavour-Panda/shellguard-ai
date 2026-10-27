@@ -33,7 +33,10 @@ class Analyzer:
             elif request.mode == Mode.CONVERT:
                 known_conversion = convert_known_command(request.command, request.source_shell, request.target_shell)
                 if known_conversion is not None:
-                    result = result.model_copy(update={"converted_command": known_conversion})
+                    result = result.model_copy(update={
+                        "converted_command": known_conversion,
+                        "semantic_differences": ["内置规则仅迁移常见用途；输出格式、隐藏项、文本编码、覆盖交互和目标路径类型仍需核对。", *result.semantic_differences][:30],
+                    })
                     conversion_source = "rule"
                 elif result.converted_command is not None:
                     conversion_source = "model"

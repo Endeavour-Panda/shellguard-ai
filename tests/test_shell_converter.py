@@ -35,3 +35,23 @@ def test_analyzer_uses_reviewed_rule_when_model_returns_null():
     result = Analyzer(Settings(), client=ConservativeClient()).analyze(request)
     assert result.model.converted_command == "Write-Output $HOME"
     assert result.conversion_source == "rule"
+
+
+@pytest.mark.parametrize(('command','source','target','expected'), [
+    ('ls', Shell.BASH, Shell.POWERSHELL, 'Get-ChildItem'),
+    ('pwd', Shell.BASH, Shell.CMD, 'cd'),
+    ('cat "quarter report.txt"', Shell.BASH, Shell.POWERSHELL, "Get-Content -LiteralPath 'quarter report.txt'"),
+    ('Copy-Item -LiteralPath notes.txt -Destination backup.txt', Shell.POWERSHELL, Shell.BASH, 'cp notes.txt backup.txt'),
+    ('type "quarter report.txt"', Shell.CMD, Shell.BASH, "cat 'quarter report.txt'"),
+])
+def test_literal_conversions(command, source, target, expected):
+    assert convert_known_command(command, source, target) == expected
+
+
+@pytest.mark.parametrize('command', [
+    "echo '$HOME'", 'echo "$home"', 'ECHO "$HOME"', 'cat *.txt',
+    'cat a.txt; rm -rf /', 'cat $(whoami)', 'cat ../secret', 'cp -r a b',
+    'cat "a"b', 'cat a.txt\ncat b.txt', 'echo off', 'cat NUL', 'echo "hello world"',
+])
+def test_rules_do_not_guess_expansion_options_or_special_names(command):
+    assert convert_known_command(command, Shell.BASH, Shell.POWERSHELL) is None

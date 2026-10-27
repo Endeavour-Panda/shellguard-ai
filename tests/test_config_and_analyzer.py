@@ -44,7 +44,15 @@ class TranslationClient:
 
 
 def test_analyzer_scans_model_translation_and_tracks_its_origin():
-    result = Analyzer(Settings(), client=TranslationClient()).analyze(request("ls", Mode.CONVERT))
+    result = Analyzer(Settings(), client=TranslationClient()).analyze(request("custom-tool --list", Mode.CONVERT))
     finding = next(item for item in result.static_findings if item.code == "broad_delete")
     assert finding.origin == "converted"
     assert result.overall_risk == RiskLevel.CRITICAL
+
+
+def test_share_is_opt_in_and_parses_false_correctly():
+    assert Settings().share is False
+    assert Settings(share='false').share is False
+    assert Settings(share='true').share is True
+    with pytest.raises(ValueError):
+        Settings(share='unexpected')

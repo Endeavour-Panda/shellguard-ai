@@ -27,6 +27,7 @@ class Settings(BaseModel):
     timeout_seconds: float = Field(default=30, ge=1, le=180)
     max_output_tokens: int = Field(default=2500, ge=256, le=8192)
     host: str = "127.0.0.1"
+    share: bool = False
     port: int = Field(default=7860, ge=1, le=65535)
 
     @field_validator("base_url")
@@ -76,6 +77,7 @@ def load_settings() -> Settings:
         backend=os.getenv("SHELLGUARD_BACKEND", "auto").strip().lower(),
         timeout_seconds=os.getenv("MODEL_TIMEOUT_SECONDS", "30"),
         max_output_tokens=os.getenv("MODEL_MAX_OUTPUT_TOKENS", "2500"),
+        share=os.getenv("APP_SHARE", "false"),
         host=os.getenv("APP_HOST", "127.0.0.1"),
         port=os.getenv("APP_PORT", "7860"),
         local_model=os.getenv("LOCAL_MODEL", "Qwen/Qwen2.5-0.5B-Instruct").strip(),
