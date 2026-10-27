@@ -6,6 +6,8 @@ ShellGuard AI 是一个基于 Python、Gradio 和 OpenAI 兼容 API 的 Shell �
 
 新增双栏分析工作台、会话历史恢复、Markdown/JSON 文件下载、可选登录、Docker 部署和本地基础模型/LoRA 推理入口。具体操作见 [启动与演示手册](docs/DEPLOYMENT.md)。学校 GPU 服务器上的部署与微调流程见 [学校服务器操作指南](docs/SCHOOL_SERVER.md)。
 
+实际完成的 AutoDL 训练与部署见 [运行管理说明](docs/AUTODL_DEPLOYED.md) 和 [真实评估与截图](artifacts/autodl/README.md)。
+
 ## 启动
 
 Python 3.10 或更新版本：

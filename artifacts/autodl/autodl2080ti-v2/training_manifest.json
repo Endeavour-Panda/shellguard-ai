@@ -1,0 +1,36 @@
+{
+  "train_records": 24,
+  "eval_records": 8,
+  "train_sha256": "e82b49baae75fa301a8aaacdc9841bf8b78e689962085a9c256d36a40403e450",
+  "eval_sha256": "f7fc9d3ccc50be843b536b7f6973f70d6067e29f2773a3dc30b56d9c61c32f7a",
+  "base_model": "/root/autodl-tmp/models/Qwen2.5-0.5B-Instruct",
+  "adapter_dir": "training_outputs/autodl2080ti-v2/lora/final_adapter",
+  "lora": {
+    "rank": 8,
+    "alpha": 16,
+    "dropout": 0.05,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ]
+  },
+  "epochs": 20.0,
+  "learning_rate": 0.0002,
+  "max_length": 1536,
+  "seed": 42,
+  "precision": "torch.float16",
+  "load_in_4bit": false,
+  "torch_version": "2.8.0+cu128",
+  "cuda_version": "12.8",
+  "train_metrics": {
+    "train_runtime": 133.1011,
+    "train_samples_per_second": 3.606,
+    "train_steps_per_second": 0.451,
+    "total_flos": 856166002560000.0,
+    "train_loss": 1.5112460603316624,
+    "epoch": 20.0
+  },
+  "cuda_device": "NVIDIA GeForce RTX 2080 Ti"
+}

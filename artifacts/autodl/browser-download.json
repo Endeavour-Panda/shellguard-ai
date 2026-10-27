@@ -1,0 +1,45 @@
+{
+  "request": {
+    "command": "rm -rf /",
+    "source_shell": "Bash",
+    "target_shell": "PowerShell",
+    "mode": "风险分析"
+  },
+  "backend": "local",
+  "model": {
+    "explanation": "递归地删除当前目录及其所有内容。",
+    "converted_command": null,
+    "risk_level": "critical",
+    "risk_reasons": [
+      "目标文件系统包含大量资源和历史记录，递归删除可能导致严重后果。"
+    ],
+    "semantic_differences": [
+      "PowerShell 的同根目录递归行为与 BASH 不同。"
+    ],
+    "validation_suggestions": [
+      "在确认目标路径前先备份并确认是希望删除的内容。"
+    ]
+  },
+  "conversion_source": "none",
+  "static_findings": [
+    {
+      "code": "deletion",
+      "level": "high",
+      "reason": "检测到删除命令或别名，可能造成不可恢复的数据丢失。",
+      "suggestion": "先列出精确目标并备份；PowerShell 可先检查 -WhatIf 的适用性。",
+      "origin": "input",
+      "statement_index": null
+    },
+    {
+      "code": "broad_delete",
+      "level": "critical",
+      "reason": "删除目标包含根目录、家目录或通配符，实际范围可能很大。",
+      "suggestion": "展开变量并人工核对绝对路径和匹配清单，勿对广泛目录直接操作。",
+      "origin": "input",
+      "statement_index": null
+    }
+  ],
+  "overall_risk": "critical",
+  "error": null,
+  "warning": "高风险警告：请暂停操作，先确认目标范围、变量实际值和备份。仅分析文本，从未执行命令。生成命令未经执行验证，请在目标 Shell 的隔离测试目录中人工核对。"
+}

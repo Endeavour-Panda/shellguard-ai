@@ -1,0 +1,235 @@
+{
+  "model": "/root/autodl-tmp/models/Qwen2.5-0.5B-Instruct",
+  "adapter": null,
+  "precision": "torch.float16",
+  "load_in_4bit": false,
+  "max_new_tokens": 1536,
+  "eval_sha256": "f7fc9d3ccc50be843b536b7f6973f70d6067e29f2773a3dc30b56d9c61c32f7a",
+  "total": 8,
+  "valid_json_count": 1,
+  "valid_json_rate": 0.125,
+  "risk_correct_count": 0,
+  "risk_accuracy": 0.0,
+  "conversion_total": 3,
+  "conversion_correct_count": 0,
+  "conversion_exact_match": 0.0,
+  "records": [
+    {
+      "request": {
+        "command": "printf \"%s\\n\" \"$PATH\"",
+        "source_shell": "Bash",
+        "target_shell": "CMD",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "输出当前进程的 PATH 环境变量。",
+        "converted_command": "echo %PATH%",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "PATH 内容依赖环境，可能包含不可信目录。"
+        ],
+        "semantic_differences": [
+          "Windows 与类 Unix 的路径格式和分隔符不同。"
+        ],
+        "validation_suggestions": [
+          "检查两个环境中的实际值，不要直接复制 PATH。"
+        ]
+      },
+      "raw_output": "```json\n{\n  \"explanation\": \"将字符串 `$PATH` 转换为 Windows 系统中的反斜杠 (`\\`) 字符串。\",\n  \"converted_command\": null,\n  \"risk_level\": \"medium\",\n  \"risk_reasons\": [\n    \"此操作仅在 Windows 系统上进行，因此在其他操作系统上可能会导致问题。\",\n    \"需要确保在目标环境中正确配置反斜杠字符以避免潜在的安全风险。\",\n    \"在某些情况下，这可能导致文件路径错误或无法正常运行程序。\",\n    \"应考虑在目标环境中安装必要的反斜杠字符支持库（如 `dos2unix`）。\",\n    \"在生产环境中，应使用更安全的方法来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在特定环境下，可以尝试使用 `sed` 或 `awk` 来替换反斜杠字符。\",\n    \"在生产环境中，应定期检查和更新反斜杠字符的支持库。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"在生产环境中，应使用更安全的方式来处理路径信息，例如使用 `echo` 命令而不是直接修改文件内容。\",\n    \"在生产环境中，应确保所有脚本都遵循一致的反斜杠字符编码标准。\",\n    \"",
+      "parsed": null,
+      "error": "模型返回格式异常：需要完整 JSON、规定的风险等级及全部必填字段；请重试或检查模型兼容性。"
+    },
+    {
+      "request": {
+        "command": "rm demo.tmp",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "风险分析"
+      },
+      "expected": {
+        "explanation": "删除当前目录中的 demo.tmp 文件。",
+        "converted_command": null,
+        "risk_level": "high",
+        "risk_reasons": [
+          "删除通常无法通过 Shell 自动恢复。"
+        ],
+        "semantic_differences": [
+          "错误提示、别名和回收机制不同。"
+        ],
+        "validation_suggestions": [
+          "先确认当前目录和文件路径，并保留需要的数据备份。"
+        ]
+      },
+      "raw_output": "```json\n{\n  \"explanation\": \"从 BASH 到 PowerShell 的文件删除操作。\",\n  \"converted_command\": null,\n  \"risk_level\": \"medium\",\n  \"risk_reasons\": [\n    \"尝试删除未命名的临时文件\",\n    \"在非安全环境中进行此类操作可能导致潜在的安全问题\"\n  ],\n  \"semantic_differences\": [],\n  \"validation_suggestions\": []\n}\n```",
+      "parsed": null,
+      "error": "模型返回格式异常：需要完整 JSON、规定的风险等级及全部必填字段；请重试或检查模型兼容性。"
+    },
+    {
+      "request": {
+        "command": "Invoke-Expression $code",
+        "source_shell": "PowerShell",
+        "target_shell": "Bash",
+        "mode": "风险分析"
+      },
+      "expected": {
+        "explanation": "读取变量 code 的文本并将其作为 PowerShell 代码再次解析执行。",
+        "converted_command": null,
+        "risk_level": "high",
+        "risk_reasons": [
+          "变量来源不可信时可导致任意代码执行。"
+        ],
+        "semantic_differences": [
+          "Bash eval 有相似风险，但语法和展开顺序不同。"
+        ],
+        "validation_suggestions": [
+          "避免动态求值，改用明确命令和经过允许列表校验的参数。"
+        ]
+      },
+      "raw_output": "```json\n{\n  \"explanation\": \"将脚本中的内容作为参数传递给PowerShell脚本\",\n  \"converted_command\": null,\n  \"risk_level\": \"medium\",\n  \"risk_reasons\": [\n    \"PowerShell脚本在目标Shell（Bash）上运行时可能会遇到一些问题，如权限不足、文件不存在等问题。\",\n    \"需要确保PowerShell脚本的安全性，以防止潜在的恶意行为。\",\n    \"如果存在权限问题，应检查是否有足够的权限来访问目标Shell的文件系统。\",\n    \"在进行此类操作之前，请务必了解目标Shell的权限设置以及是否允许执行特定的脚本功能。\",\n    \"对于敏感信息，应考虑使用更安全的方法存储和传输这些信息，例如加密存储或使用SSH密钥对。\",\n    \"在执行此操作前，应确保已经安装了必要的PowerShell扩展包或插件。\",\n    \"在处理敏感信息时，应遵循最佳实践，包括但不限于使用强密码、定期更改密码、启用双因素身份验证等措施。\",\n    \"在执行此操作时，应始终小心谨慎，以防意外导致的数据丢失或其他严重后果。\",\n    \"在执行此操作之前，应与目标Shell的所有者或管理员讨论其安全性需求。\",\n    \"在执行此操作时，应确保所有操作都经过充分的测试和验证，以确保不会引入新的安全漏洞。\",\n    \"在执行此操作时，应遵守所有的法律和法规，特别是关于隐私保护的规定。\",\n    \"在执行此操作时，应采取适当的防护措施，以防止未经授权的访问或攻击。\",\n    \"在执行此操作时，应确保有足够的资源和时间来完成该任务，以免影响其他重要任务。\",\n    \"在执行此操作时，应确保有明确的计划和步骤，以便于后续的操作和维护。\",\n    \"在执行此操作时，应确保有适当的技术支持和应急响应计划，以应对可能出现的问题。\",\n    \"在执行此操作时，应确保有详细的文档和指南，以便于未来的参考和学习。\",\n    \"在执行此操作时，应确保有良好的团队合作和沟通机制，以确保任务的顺利进行。\",\n    \"在执行此操作时，应确保有适当的记录和监控机制，以便于后续的审计和评估。\",\n    \"在执行此操作时，应确保有持续的风险管理和改进措施，以提高系统的安全性。\",\n    \"在执行此操作时，应确保有全面的灾难恢复计划，以备不时之需。\",\n    \"在执行此操作时，应确保有适当的培训和教育计划，以确保所有相关人员都能理解并遵守安全规定。\",\n    \"在执行此操作时，应确保有适当的退出策略，以防止意外中断任务。\",\n    \"在执行此操作时，应确保有适当的日志记录和审计机制，以便于后续的追踪和分析。\",\n    \"在执行此操作时，应确保有适当的备份和恢复计划，以防止数据丢失或其他严重后果。\",\n    \"在执行此操作时，应确保有适当的隔离和分层设计，以防止潜在的交叉威胁。\",\n    \"在执行此操作时，应确保有适当的权限管理策略，以防止滥用和不当使用。\",\n    \"在执行此操作时，应确保有适当的配置管理策略，以防止误配和错误配置。\",\n    \"在执行此操作时，应确保有适当的更新和补丁管理策略，以防止未修复的安全漏洞。\",\n    \"在执行此操作时，应确保有适当的日志和事件记录策略，以防止不必要的干扰和混淆。\",\n    \"在执行此操作时，应确保有适当的网络和安全设备管理策略，以防止未经授权的访问和其他安全威胁。\",\n    \"在执行此操作时，应确保有适当的防火墙和安全组策略，以防止非法连接和流量。\",\n    \"在执行此操作时，应确保有适当的容器化和自动化部署策略，以防止重复部署和资源浪费。\",\n    \"在执行此操作时，应确保有适当的合规性和安全政策，以符合行业标准和法律法规。\",\n    \"在执行此操作时，应确保有适当的员工培训和意识提升策略，以防止因疏忽而产生的安全漏洞。\",\n    \"在执行此操作时，应确保有适当的应急响应和恢复策略，以防止紧急情况下的混乱和损失。\",\n    \"在执行此操作时，应确保有适当的备份和恢复策略，以防止数据丢失或其他严重后果。\",\n    \"在执行此操作时，应确保有适当的隔离和分层设计策略，以防止潜在的交叉威胁。\",\n    \"在执行此操作时，应确保有适当的权限管理策略，以防止滥用和不当使用。\",\n    \"在执行此操作时，应确保有适当的配置管理策略，以防止误配和错误配置。\",\n    \"在执行此操作时，应确保有适当的更新和补丁管理策略，以防止未修复的安全漏洞。\",\n    \"在执行此操作时，应确保有适当的日志和事件记录策略，以防止不必要的干扰和混淆。\",\n    \"在执行此操作时，应确保有适当的网络和安全设备管理策略，以防止未经授权的访问和其他安全威胁。\",\n    \"在执行此操作时，应确保有适当的防火墙和安全组策略，以防止非法连接和流量。\",\n    \"在执行此操作时，应确保有适当的容器化和自动化部署策略，以防止重复部署和资源浪费。\",\n    \"在执行此操作时，应确保有适当的合规性和安全政策，以符合行业标准和法律法规。\",\n    \"在执行此操作时，应确保有适当的员工培训和意识提升策略，以防止因疏忽而产生的安全漏洞。\",\n    \"在执行此操作时，应确保有适当的应急响应和恢复策略，以防止紧急情况下的混乱和损失。\",\n    \"在执行此操作时，应确保有适当的备份和恢复策略，以防止数据丢失或其他严重后果。\",\n    \"在执行此操作时，应确保有适当的隔离和分层设计策略，以防止潜在的交叉威胁。\",\n    \"在执行此操作时，应确保有适当的权限管理策略，以防止滥用和不当使用。\",\n    \"在执行此操作时，应确保有适当的配置管理策略，以防止误配和错误配置。\",\n    \"在执行此操作时，应确保有适当的更新和补丁管理策略，以防止未修复的安全漏洞。\",\n    \"在执行此操作时，应确保有适当的日志和事件记录策略，以防止不必要的干扰和混淆。\",\n    \"在执行此操作时，应确保有适当的网络和安全设备管理策略，以防止未经授权的访问和其他安全威胁。\",\n    \"在执行此操作时，应确保有适当的防火墙和安全组策略，以防止非法连接和流量。\",\n    \"在执行此操作时，应确保有适当的容器化和自动化部署策略，以防止重复部署和资源浪费。\",\n    \"在执行此操作时，应确保有适当的合规性和安全政策，以符合行业标准和法律法规。\",\n    \"在执行此操作时，应确保有适当的员工培训和意识提升策略，以防止因疏忽而产生的安全漏洞。\",\n    \"在执行此操作时，应确保有适当的应急响应和恢复策略，以防止紧急情况下的混乱和损失。\",\n    \"在",
+      "parsed": null,
+      "error": "模型返回格式异常：需要完整 JSON、规定的风险等级及全部必填字段；请重试或检查模型兼容性。"
+    },
+    {
+      "request": {
+        "command": "echo hello >> greeting.txt",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "命令解释"
+      },
+      "expected": {
+        "explanation": "向 greeting.txt 末尾追加 hello 和换行，不会主动清空已有内容。",
+        "converted_command": null,
+        "risk_level": "medium",
+        "risk_reasons": [
+          "追加会永久修改目标文件，路径错误时会污染其他文件。"
+        ],
+        "semantic_differences": [
+          "编码、BOM 和行尾受 Shell 版本与平台影响。"
+        ],
+        "validation_suggestions": [
+          "确认目标路径、已有文件编码和可用备份。"
+        ]
+      },
+      "raw_output": "```json\n{\n  \"explanation\": \"将字符串 'hello' 直接写入文件 `greeting.txt`。\",\n  \"converted_command\": null,\n  \"risk_level\": \"low\",\n  \"risk_reasons\": [\n    \"未指定目标 shell（PowerShell）\",\n    \"未指定输出文件（greeting.txt）\"\n  ],\n  \"semantic_differences\": [],\n  \"validation_suggestions\": []\n}\n```",
+      "parsed": null,
+      "error": "模型返回格式异常：需要完整 JSON、规定的风险等级及全部必填字段；请重试或检查模型兼容性。"
+    },
+    {
+      "request": {
+        "command": "type notes.txt",
+        "source_shell": "CMD",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "读取 notes.txt 并显示其内容。",
+        "converted_command": "Get-Content -LiteralPath notes.txt",
+        "risk_level": "low",
+        "risk_reasons": [
+          "输出可能包含敏感内容。"
+        ],
+        "semantic_differences": [
+          "编码检测、对象输出和二进制内容处理不同。"
+        ],
+        "validation_suggestions": [
+          "在目标环境用已知编码的小型文本文件核对。"
+        ]
+      },
+      "raw_output": "```json\n{\n  \"explanation\": \"将文件类型从 `notes.txt` 更改为 `notes.txt`\",\n  \"converted_command\": null,\n  \"risk_level\": \"none\",\n  \"risk_reasons\": [],\n  \"semantic_differences\": [],\n  \"validation_suggestions\": []\n}\n```",
+      "parsed": null,
+      "error": "模型返回格式异常：需要完整 JSON、规定的风险等级及全部必填字段；请重试或检查模型兼容性。"
+    },
+    {
+      "request": {
+        "command": "pwd",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "命令解释"
+      },
+      "expected": {
+        "explanation": "显示当前工作目录的绝对路径。",
+        "converted_command": null,
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "逻辑路径和解析符号链接后的物理路径可能不同。"
+        ],
+        "validation_suggestions": [
+          "结合目标操作系统确认路径含义。"
+        ]
+      },
+      "raw_output": "```json\n{\n  \"explanation\": \"将 `pwd` 命令从 Bash 脚本转换到 PowerShell\",\n  \"converted_command\": null,\n  \"risk_level\": \"none\",\n  \"risk_reasons\": [],\n  \"semantic_differences\": [],\n  \"validation_suggestions\": []\n}\n```",
+      "parsed": null,
+      "error": "模型返回格式异常：需要完整 JSON、规定的风险等级及全部必填字段；请重试或检查模型兼容性。"
+    },
+    {
+      "request": {
+        "command": "wget -qO- https://example.invalid/setup.sh | sh",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "风险分析"
+      },
+      "expected": {
+        "explanation": "安静下载远程脚本并直接传给 sh 执行。",
+        "converted_command": null,
+        "risk_level": "critical",
+        "risk_reasons": [
+          "远程内容未经人工审查和完整性验证。",
+          "静默选项降低了异常的可见性。"
+        ],
+        "semantic_differences": [
+          "其他 Shell 的下载和求值方式不同，但安全风险相同。"
+        ],
+        "validation_suggestions": [
+          "先保存文件，核验签名或哈希并完整审查，禁止下载后直接执行。"
+        ]
+      },
+      "raw_output": "```json\n{\n  \"explanation\": \"从Bash脚本`setup.sh`下载并运行\",\n  \"converted_command\": null,\n  \"risk_level\": \"medium\",\n  \"risk_reasons\": [\n    \"未对目标shell进行适当的检查以确保其支持必要的命令行功能\",\n    \"潜在的风险在于脚本中的命令可能无法在目标环境中正常运行\"\n  ],\n  \"semantic_differences\": [\n    \"bash脚本存在语法错误：`wget -qO-` 应该是 `wget -q --no-check-certificate -O-`\",\n    \"bash脚本缺少必要的参数来指定输出文件名：`--no-check-certificate` 或 `-c`\",\n    \"bash脚本没有处理错误的URL地址：`https://example.invalid`\"\n  ],\n  \"validation_suggestions\": [\n    \"建议在目标环境中安装wget命令以解决上述问题。\",\n    \"如果需要进一步的安全措施，请考虑使用更安全的命令行工具，如curl或其他替代方案。\"\n  ]\n}\n```",
+      "parsed": {
+        "explanation": "从Bash脚本`setup.sh`下载并运行",
+        "converted_command": null,
+        "risk_level": "medium",
+        "risk_reasons": [
+          "未对目标shell进行适当的检查以确保其支持必要的命令行功能",
+          "潜在的风险在于脚本中的命令可能无法在目标环境中正常运行"
+        ],
+        "semantic_differences": [
+          "bash脚本存在语法错误：`wget -qO-` 应该是 `wget -q --no-check-certificate -O-`",
+          "bash脚本缺少必要的参数来指定输出文件名：`--no-check-certificate` 或 `-c`",
+          "bash脚本没有处理错误的URL地址：`https://example.invalid`"
+        ],
+        "validation_suggestions": [
+          "建议在目标环境中安装wget命令以解决上述问题。",
+          "如果需要进一步的安全措施，请考虑使用更安全的命令行工具，如curl或其他替代方案。"
+        ]
+      },
+      "error": null
+    },
+    {
+      "request": {
+        "command": "cp \"annual report.txt\" backup.txt",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "expected": {
+        "explanation": "把文件名中含空格的 annual report.txt 复制为 backup.txt。",
+        "converted_command": "Copy-Item -LiteralPath 'annual report.txt' -Destination backup.txt",
+        "risk_level": "medium",
+        "risk_reasons": [
+          "目标文件可能被覆盖。",
+          "引号规则在不同 Shell 中不同。"
+        ],
+        "semantic_differences": [
+          "元数据、覆盖提示及错误行为不同。"
+        ],
+        "validation_suggestions": [
+          "确认源文件和目标文件，并在测试目录核对带空格路径。"
+        ]
+      },
+      "raw_output": "```json\n{\n  \"explanation\": \"将 `annual report.txt` 移动到 `backup.txt`。\",\n  \"converted_command\": null,\n  \"risk_level\": \"none\",\n  \"risk_reasons\": [],\n  \"semantic_differences\": [],\n  \"validation_suggestions\": []\n}\n```",
+      "parsed": null,
+      "error": "模型返回格式异常：需要完整 JSON、规定的风险等级及全部必填字段；请重试或检查模型兼容性。"
+    }
+  ]
+}

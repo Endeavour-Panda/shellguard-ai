@@ -1,0 +1,101 @@
+[
+  {
+    "seconds": 13.59,
+    "result": {
+      "request": {
+        "command": "ls",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "backend": "local",
+      "model": null,
+      "conversion_source": "none",
+      "static_findings": [],
+      "overall_risk": "low",
+      "error": "模型返回格式异常：需要完整 JSON、规定的风险等级及全部必填字段；请重试或检查模型兼容性。",
+      "warning": "仅分析文本，从未执行命令。生成命令未经执行验证，请在目标 Shell 的隔离测试目录中人工核对。"
+    }
+  },
+  {
+    "seconds": 3.89,
+    "result": {
+      "request": {
+        "command": "rm -rf /",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "风险分析"
+      },
+      "backend": "local",
+      "model": {
+        "explanation": "删除整个目录及其内容。",
+        "converted_command": null,
+        "risk_level": "high",
+        "risk_reasons": [
+          "此操作会删除所有文件和子目录，包括隐藏文件和符号链接。",
+          "如果目标目录包含敏感信息，应谨慎处理。"
+        ],
+        "semantic_differences": [
+          "在 Windows 上，此操作将删除整个驱动器。"
+        ],
+        "validation_suggestions": [
+          "确保目标目录是空的。"
+        ]
+      },
+      "conversion_source": "none",
+      "static_findings": [
+        {
+          "code": "deletion",
+          "level": "high",
+          "reason": "检测到删除命令或别名，可能造成不可恢复的数据丢失。",
+          "suggestion": "先列出精确目标并备份；PowerShell 可先检查 -WhatIf 的适用性。",
+          "origin": "input",
+          "statement_index": null
+        },
+        {
+          "code": "broad_delete",
+          "level": "critical",
+          "reason": "删除目标包含根目录、家目录或通配符，实际范围可能很大。",
+          "suggestion": "展开变量并人工核对绝对路径和匹配清单，勿对广泛目录直接操作。",
+          "origin": "input",
+          "statement_index": null
+        }
+      ],
+      "overall_risk": "critical",
+      "error": null,
+      "warning": "高风险警告：请暂停操作，先确认目标范围、变量实际值和备份。仅分析文本，从未执行命令。生成命令未经执行验证，请在目标 Shell 的隔离测试目录中人工核对。"
+    }
+  },
+  {
+    "seconds": 2.69,
+    "result": {
+      "request": {
+        "command": "pwd",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "命令解释"
+      },
+      "backend": "local",
+      "model": {
+        "explanation": "显示当前目录",
+        "converted_command": null,
+        "risk_level": "low",
+        "risk_reasons": [
+          "目标 shell 不支持 pwd 命令"
+        ],
+        "semantic_differences": [
+          "无",
+          "无"
+        ],
+        "validation_suggestions": [
+          "确保目标 shell 支持 pwd 命令"
+        ]
+      },
+      "conversion_source": "none",
+      "static_findings": [],
+      "overall_risk": "low",
+      "error": null,
+      "warning": "仅分析文本，从未执行命令。生成命令未经执行验证，请在目标 Shell 的隔离测试目录中人工核对。"
+    }
+  }
+]

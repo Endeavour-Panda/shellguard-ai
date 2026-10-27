@@ -1,0 +1,117 @@
+[
+  {
+    "seconds": 13.53,
+    "result": {
+      "request": {
+        "command": "ls",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "跨 Shell 转换"
+      },
+      "backend": "local",
+      "model": {
+        "explanation": "列出当前目录内容。",
+        "converted_command": "Get-ChildItem -Path . | Select-Object Name, Type, Length. ",
+        "risk_level": "medium",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "Windows 目录项以反斜杠分隔，输出方式与 Linux 不同。"
+        ],
+        "validation_suggestions": [
+          "确认目标路径包含非隐藏文件，并检查反斜杠行为。"
+        ]
+      },
+      "conversion_source": "model",
+      "static_findings": [
+        {
+          "code": "composition",
+          "level": "medium",
+          "reason": "存在管道、连接符或多行命令；各 Shell 的数据类型与失败处理不同。",
+          "suggestion": "逐段核对文本/对象管道、退出码、短路逻辑和换行续行规则。",
+          "origin": "converted",
+          "statement_index": null
+        }
+      ],
+      "overall_risk": "medium",
+      "error": null,
+      "warning": "仅分析文本，从未执行命令。生成命令未经执行验证，请在目标 Shell 的隔离测试目录中人工核对。"
+    }
+  },
+  {
+    "seconds": 3.89,
+    "result": {
+      "request": {
+        "command": "rm -rf /",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "风险分析"
+      },
+      "backend": "local",
+      "model": {
+        "explanation": "递归地删除当前目录及其所有内容。",
+        "converted_command": null,
+        "risk_level": "critical",
+        "risk_reasons": [
+          "目标文件系统包含大量资源和历史记录，递归删除可能导致严重后果。"
+        ],
+        "semantic_differences": [
+          "PowerShell 的同根目录递归行为与 BASH 不同。"
+        ],
+        "validation_suggestions": [
+          "在确认目标路径前先备份并确认是希望删除的内容。"
+        ]
+      },
+      "conversion_source": "none",
+      "static_findings": [
+        {
+          "code": "deletion",
+          "level": "high",
+          "reason": "检测到删除命令或别名，可能造成不可恢复的数据丢失。",
+          "suggestion": "先列出精确目标并备份；PowerShell 可先检查 -WhatIf 的适用性。",
+          "origin": "input",
+          "statement_index": null
+        },
+        {
+          "code": "broad_delete",
+          "level": "critical",
+          "reason": "删除目标包含根目录、家目录或通配符，实际范围可能很大。",
+          "suggestion": "展开变量并人工核对绝对路径和匹配清单，勿对广泛目录直接操作。",
+          "origin": "input",
+          "statement_index": null
+        }
+      ],
+      "overall_risk": "critical",
+      "error": null,
+      "warning": "高风险警告：请暂停操作，先确认目标范围、变量实际值和备份。仅分析文本，从未执行命令。生成命令未经执行验证，请在目标 Shell 的隔离测试目录中人工核对。"
+    }
+  },
+  {
+    "seconds": 2.79,
+    "result": {
+      "request": {
+        "command": "pwd",
+        "source_shell": "Bash",
+        "target_shell": "PowerShell",
+        "mode": "命令解释"
+      },
+      "backend": "local",
+      "model": {
+        "explanation": "输出当前目录的全名。",
+        "converted_command": null,
+        "risk_level": "low",
+        "risk_reasons": [],
+        "semantic_differences": [
+          "当前目录显示方式因操作系统而异。"
+        ],
+        "validation_suggestions": [
+          "确认当前目录并检查输出是否包含隐藏文件或符号链接。"
+        ]
+      },
+      "conversion_source": "none",
+      "static_findings": [],
+      "overall_risk": "low",
+      "error": null,
+      "warning": "仅分析文本，从未执行命令。生成命令未经执行验证，请在目标 Shell 的隔离测试目录中人工核对。"
+    }
+  }
+]
