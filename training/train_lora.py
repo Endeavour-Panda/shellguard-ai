@@ -5,7 +5,7 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
-from src.finetuning import LoRAOptions, build_lora_config, build_training_messages
+from src.finetuning import LoRAOptions, build_lora_config, build_training_messages, supports_native_bf16
 from training.validate_data import load_records, validate_pair
 
 
@@ -84,10 +84,7 @@ def main() -> None:
 
     if not torch.cuda.is_available():
         raise SystemExit("未检测到 CUDA GPU。为避免意外的长时间 CPU 训练，脚本已停止。")
-    if not torch.cuda.is_bf16_supported() and not args.load_in_4bit:
-        precision = torch.float16
-    else:
-        precision = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
+    precision = torch.bfloat16 if supports_native_bf16(torch) else torch.float16
 
     manifest = validate_pair(args.train_file, args.eval_file)
     set_seed(args.seed)
@@ -168,6 +165,10 @@ def main() -> None:
         "learning_rate": args.learning_rate,
         "max_length": args.max_length,
         "seed": args.seed,
+        "precision": str(precision),
+        "load_in_4bit": args.load_in_4bit,
+        "torch_version": torch.__version__,
+        "cuda_version": torch.version.cuda,
         "train_metrics": train_result.metrics,
         "cuda_device": torch.cuda.get_device_name(0),
     })

@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from src.finetuning import build_training_messages
+from src.finetuning import build_training_messages, supports_native_bf16
 from src.llm_client import ModelClientError, parse_model_response
 from training.metrics import summarize
 from training.validate_data import fingerprint, load_records
@@ -32,7 +32,7 @@ def main() -> None:
     if not torch.cuda.is_available():
         raise SystemExit("未检测到 CUDA GPU，评估已停止。")
 
-    dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
+    dtype = torch.bfloat16 if supports_native_bf16(torch) else torch.float16
     tokenizer_source = str(args.adapter) if args.adapter else args.model
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_source, trust_remote_code=False)
     model_kwargs = {"device_map": "auto", "torch_dtype": dtype, "trust_remote_code": False}
@@ -76,6 +76,9 @@ def main() -> None:
     report = {
         "model": args.model,
         "adapter": str(args.adapter) if args.adapter else None,
+        "precision": str(dtype),
+        "load_in_4bit": args.load_in_4bit,
+        "max_new_tokens": args.max_new_tokens,
         "eval_sha256": fingerprint(args.eval_file),
         **summarize(rows),
         "records": rows,

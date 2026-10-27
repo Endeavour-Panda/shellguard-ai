@@ -43,3 +43,8 @@ def build_training_messages(request: AnalysisRequest, reviewed_answer: ModelAnal
     if request.mode.value != "跨 Shell 转换" and reviewed_answer.converted_command is not None:
         raise ValueError("非转换任务的人工审核答案不能包含转换命令。")
     return [*build_messages(request), {"role": "assistant", "content": json.dumps(reviewed_answer.model_dump(mode="json"), ensure_ascii=False)}]
+
+
+def supports_native_bf16(torch) -> bool:
+    """Exclude software emulation on pre-Ampere GPUs such as RTX 2080 Ti."""
+    return torch.cuda.get_device_capability(0)[0] >= 8 and torch.cuda.is_bf16_supported()

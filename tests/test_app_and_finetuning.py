@@ -45,3 +45,14 @@ def test_lora_preparation_formats_reviewed_answer_without_training():
     messages = build_training_messages(request, answer)
     assert [item["role"] for item in messages] == ["system", "user", "assistant"]
     assert LoRAOptions().target_modules == ("q_proj", "v_proj")
+
+
+def test_precision_excludes_bf16_emulation_on_turing():
+    from types import SimpleNamespace
+    from src.finetuning import supports_native_bf16
+    for major, expected in [(7, False), (8, True)]:
+        fake_torch = SimpleNamespace(cuda=SimpleNamespace(
+            get_device_capability=lambda index: (major, 5),
+            is_bf16_supported=lambda: True,
+        ))
+        assert supports_native_bf16(fake_torch) is expected
