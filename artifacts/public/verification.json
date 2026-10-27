@@ -1,11 +1,13 @@
 {
-  "url": "https://dba4c1843b5dd71ba0.gradio.live",
-  "verified_at": "2026-10-27T08:56:21.556045+00:00",
+  "url": "https://0e26bd6ced90cba556.gradio.live",
+  "verified_at": "2026-10-27T09:24:23.653828+00:00",
   "checks": [
-    "HTTPS login and Qwen2.5-1.5B LoRA page",
+    "HTTPS login, creator attribution and Qwen2.5-1.5B LoRA page",
     "Live local-model response plus quoted-filename conversion",
     "Critical-risk analysis without executing command",
-    "Authenticated JSON download"
+    "Authenticated JSON download",
+    "Mobile 390px layout without horizontal page overflow",
+    "New password login succeeds; previous password rejected"
   ],
-  "qr_decoded_url": "https://dba4c1843b5dd71ba0.gradio.live"
+  "qr_decoded_url": "https://0e26bd6ced90cba556.gradio.live"
 }

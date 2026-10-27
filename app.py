@@ -20,18 +20,75 @@ from src.config import ConfigurationError, Settings, load_settings
 from src.examples import gradio_examples
 from src.schemas import AnalysisRequest, AnalysisResult, Mode, RISK_LABELS, Shell
 
-EMPTY_REPORT = "输入命令并点击“分析命令”以查看结果。"
+EMPTY_REPORT = "## 从一条命令开始\n\n选择左侧任务，输入命令或载入示例，然后点击 **分析命令**。\n\n---\n\n**读懂命令** · 理解参数与执行意图\n\n**转换语法** · 在三种 Shell 之间迁移常见用法\n\n**识别风险** · 核对删除、覆盖及远程执行等操作\n\n> 结果将在这里呈现。所有命令仅作文本分析，不会执行。"
 CSS = """
-.gradio-container { max-width: 1280px !important; }
-.shellguard-head { background: linear-gradient(120deg, #0f172a, #164e63); border-radius: 20px; padding: 28px !important; margin-bottom: 18px; }
-.shellguard-head h1, .shellguard-head p { color: #f8fafc !important; }
-.shellguard-head h1 { font-size: 34px !important; }
-#result-panel { border: 1px solid var(--border-color-primary); border-radius: 16px; padding: 22px; min-height: 300px; }
-#analysis-summary { padding: 12px; border-radius: 10px; background: var(--background-fill-secondary); }
-.shellguard-head { border-bottom: 1px solid var(--border-color-primary); padding-bottom: 12px; }
-.shellguard-head h1 { font-size: 28px; letter-spacing: -0.5px; }
+.gradio-container { max-width: 1320px !important; padding: 28px 24px !important; }
+body { background: #f3f6fa; }
+.sg-hero { display: grid; grid-template-columns: 1.35fr 1fr; gap: 36px; align-items: center; padding: 36px 40px; border-radius: 24px; color: #edf6ff; background: radial-gradient(ellipse at 85% 15%, #16556a 0, transparent 56%), #101d35; box-shadow: 0 16px 48px #10213a14; }
+.sg-eyebrow { color: #8ee1d5; font-size: 12px; font-weight: 600; letter-spacing: 2px; margin-bottom: 14px; }
+.sg-hero h1 { font-size: clamp(30px, 4vw, 44px); line-height: 1.12; letter-spacing: -1.5px; margin: 0 0 12px; color: #fff; font-weight: 750; }
+.sg-hero .sg-subtitle { color: #c4d5e8; font-size: 16px; line-height: 1.8; margin: 0; }
+.sg-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.sg-tags span { padding: 6px 12px; border: 1px solid #ffffff24; border-radius: 999px; font-size: 12px; color: #d9eaf5; background: #ffffff08; }
+.sg-terminal { padding: 20px 22px; border: 1px solid #ffffff24; border-radius: 16px; background: #071327a6; box-shadow: 0 16px 28px #00000014; }
+.sg-terminal-top { display: flex; align-items: center; gap: 6px; color: #a3b9ce; font-size: 11px; margin-bottom: 22px; }
+.sg-dot { width: 7px; height: 7px; border-radius: 50%; background: #476079; }
+.sg-terminal-top .sg-terminal-label { margin-left: auto; letter-spacing: 1px; }
+.sg-terminal code { color: #e5f4ff; font-size: 15px; line-height: 1.8; }
+.sg-terminal .sg-prompt { color: #60d7be; margin-right: 12px; }
+.sg-terminal .sg-arrow { color: #8299b2; font-size: 12px; margin: 12px 0; padding-left: 24px; }
+.sg-terminal-note { color: #94adc5; border-top: 1px solid #ffffff14; padding-top: 14px; margin-top: 18px; font-size: 11px; }
+#input-panel, #output-panel { border: 1px solid var(--border-color-primary); border-radius: 20px; padding: 22px; background: var(--background-fill-primary); box-shadow: 0 5px 18px #10213a04; }
+#workspace { gap: 20px; margin-top: 8px; }
+#input-panel h3, #output-panel h3 { font-size: 18px; letter-spacing: -.3px; }
+#input-panel textarea { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; line-height: 1.8; }
+#analyze-button { background: #087f8c; color: white; border: 1px solid #087f8c; border-radius: 11px; min-height: 46px; font-weight: 650; box-shadow: 0 4px 12px #087f8c20; }
+#analyze-button:hover { background: #066a75; border-color: #066a75; }
+#analysis-summary { padding: 12px 14px; border: 1px solid var(--border-color-primary); border-radius: 11px; background: var(--background-fill-secondary); font-size: 13px; }
+#result-panel { padding: 18px 8px; min-height: 350px; }
+#result-panel h2 { font-size: 22px; }
+#result-panel h3 { margin-top: 24px; font-size: 15px; }
+#result-panel pre { border-radius: 10px; }
+#result-panel blockquote { border-left: 3px solid #16a6a0; padding: 10px 14px; }
+.sg-footer { display: flex; justify-content: space-between; gap: 16px; padding: 22px 4px 4px; color: #708197; font-size: 12px; border-top: 1px solid var(--border-color-primary); margin-top: 8px; }
+.sg-footer strong { color: #36516c; font-weight: 600; }
+.dark body { background: #0b1220; }
+.dark .sg-footer strong { color: #c2d4e5; }
 footer { display: none !important; }
+@media (max-width: 760px) {
+ .gradio-container { padding: 14px 12px !important; }
+ .sg-hero { grid-template-columns: 1fr; gap: 22px; padding: 26px 22px; border-radius: 18px; }
+ .sg-terminal { padding: 16px 18px; }
+ .sg-terminal-top { margin-bottom: 12px; }
+ #input-panel, #output-panel { min-width: 0 !important; padding: 16px; }
+ .sg-footer { flex-direction: column; gap: 6px; }
+}
 """
+
+HERO_HTML = """
+<section class="sg-hero" aria-label="ShellGuard AI 项目介绍">
+  <div>
+    <div class="sg-eyebrow">燕山大学 · 大模型应用实验</div>
+    <h1>ShellGuard AI<span style="color:#62dbc7">.</span></h1>
+    <p class="sg-subtitle">让命令更易读，让跨平台转换更清晰。<br>解释命令、迁移语法，先看懂风险再行动。</p>
+    <div class="sg-tags"><span>李振昊创作</span><span>Bash / PowerShell / CMD</span><span>仅分析 · 不执行</span></div>
+  </div>
+  <div class="sg-terminal" aria-label="转换示例：ls 转为 Get-ChildItem">
+    <div class="sg-terminal-top"><span class="sg-dot"></span><span class="sg-dot"></span><span class="sg-dot"></span><span class="sg-terminal-label">COMMAND PREVIEW</span></div>
+    <div><code><span class="sg-prompt">$</span>ls</code></div>
+    <div class="sg-arrow">Bash → PowerShell · 转换示例</div>
+    <div><code><span class="sg-prompt">›</span>Get-ChildItem</code></div>
+    <div class="sg-terminal-note">理解意图 / 保留参数 / 提示差异</div>
+  </div>
+</section>
+"""
+
+AUTH_MESSAGE = """<div style="text-align:center;padding:12px 0 22px">
+<div style="color:#087f8c;font-size:12px;letter-spacing:2px;margin-bottom:12px">燕山大学 · 大模型应用实验</div>
+<h1 style="font-size:30px;margin:0 0 12px;letter-spacing:-1px">ShellGuard AI</h1>
+<p style="opacity:.75;line-height:1.8">跨 Shell 命令智能分析助手<br>登录后开始解释、转换与风险分析</p>
+<div style="font-size:13px;color:#087f8c;margin-top:18px">李振昊创作 · 燕山大学</div></div>"""
+
 
 
 def _plain(text: str) -> str:
@@ -54,7 +111,7 @@ def _render_result(result: AnalysisResult) -> tuple[str, str, str]:
     }[result.backend]
     request = result.request
     header = f"## 总风险：{RISK_LABELS[result.overall_risk]}（{result.overall_risk.value}）\n{backend}"
-    context = f"**模式：**{request.mode.value} · {request.source_shell.value}"
+    context = f"**模式：** {request.mode.value} · {request.source_shell.value}"
     if request.mode == Mode.CONVERT:
         context += f" → {request.target_shell.value}"
     context += f"\n\n### 原始命令\n{_code(request.command)}"
@@ -164,11 +221,11 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
     except ConfigurationError as exc:
         backend, configuration_error = "unconfigured", str(exc)
 
-    with gr.Blocks(title="ShellGuard AI · Shell 命令分析", theme=gr.themes.Soft(primary_hue="cyan", neutral_hue="slate",
+    with gr.Blocks(title="ShellGuard AI · 李振昊 · 燕山大学", theme=gr.themes.Soft(primary_hue="teal", neutral_hue="slate",
                    font=["system-ui", "sans-serif"], font_mono=["ui-monospace", "monospace"]),
                    css=CSS, analytics_enabled=False, delete_cache=(3600, 3600)) as demo:
         history = gr.State([])
-        gr.Markdown("# ShellGuard AI\n跨 Shell 命令智能分析助手\n\n读懂命令 · 迁移语法 · 识别风险", elem_classes=["shellguard-head"])
+        gr.HTML(HERO_HTML)
         if backend == "mock":
             gr.Markdown("**离线演示** · 未调用大模型。12 组预置样例可体验完整流程，未知命令仅提供静态检测。")
         elif backend == "local":
@@ -178,8 +235,8 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
             gr.Markdown(f"**在线模型 · {_plain(settings.model_name)}** · 调用状态以每次分析结果为准。")
         else:
             gr.Markdown(f"**配置提示：**{_plain(configuration_error)} 静态检测仍可使用。")
-        with gr.Row():
-            with gr.Column(scale=5, min_width=320):
+        with gr.Row(elem_id="workspace"):
+            with gr.Column(scale=5, min_width=320, elem_id="input-panel"):
                 gr.Markdown("### 01 / 输入命令")
                 mode = gr.Radio([x.value for x in Mode], value=Mode.EXPLAIN.value, label="分析任务")
                 with gr.Row():
@@ -187,7 +244,7 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
                     target = gr.Dropdown([x.value for x in Shell], value=Shell.POWERSHELL.value, label="目标 Shell", interactive=False)
                 command = gr.Textbox(label="命令文本", placeholder="输入 ls，或从下方示例开始…", lines=7, max_lines=16, max_length=8000)
                 with gr.Row():
-                    analyze_button = gr.Button("分析命令", variant="primary")
+                    analyze_button = gr.Button("分析命令", variant="primary", elem_id="analyze-button")
                     clear_button = gr.Button("清空输入与结果")
                 gr.Markdown("仅分析文本，不执行命令。请勿输入密码、令牌等敏感内容。")
                 with gr.Accordion("示例库 · 点击载入", open=True):
@@ -196,7 +253,7 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
                     gr.Markdown("最多保留最近 20 条；不同浏览器会话相互隔离，刷新页面后重置。")
                     history_picker = gr.Dropdown(choices=[], label="选择记录以恢复输入与结果", interactive=True)
                     clear_history = gr.Button("清除会话记录")
-            with gr.Column(scale=7, min_width=320):
+            with gr.Column(scale=7, min_width=320, elem_id="output-panel"):
                 gr.Markdown("### 02 / 分析结果")
                 summary = gr.Markdown("等待分析 · 选择示例或输入命令开始", elem_id="analysis-summary")
                 with gr.Tabs():
@@ -212,6 +269,8 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
                             download_json = gr.DownloadButton("下载 JSON", value=None, interactive=False)
         with gr.Accordion("使用指南与实验展示", open=False):
             gr.Markdown("1. **命令解释**：输入 `ls`，查看含义、风险与验证建议。\n2. **跨 Shell 转换**：选择 Bash → PowerShell，输入 `ls`，对照转换结果及语义差异。\n3. **风险分析**：输入 `rm -rf /`，查看严重风险及命中的静态规则（不会执行）。\n4. **保存材料**：在复制与导出页下载分析文件；会话记录可恢复之前的案例。\n\n真实 API、本地基础模型和 LoRA 模型均通过服务端环境变量切换。离线演示不代表真实推理或微调效果。")
+
+        gr.HTML('<div class="sg-footer"><span><strong>ShellGuard AI</strong> · 让命令更清晰</span><span>李振昊创作 · 燕山大学 · 课程实验作品</span></div>')
 
         outputs = [report, structured, copy_result]
         analyze_button.click(lambda *values: analyze_session(analyzer, *values),
@@ -234,4 +293,4 @@ if __name__ == "__main__":
     config = load_settings()
     auth = launch_auth(config)
     create_app(config).launch(server_name=config.host, server_port=config.port, share=config.share,
-                             auth=auth, show_error=False, max_threads=8)
+                             auth=auth, auth_message=AUTH_MESSAGE, show_error=False, max_threads=8)

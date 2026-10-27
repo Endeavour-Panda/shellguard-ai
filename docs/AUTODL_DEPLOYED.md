@@ -1,15 +1,15 @@
 # AutoDL 实际部署操作说明
 
 项目目录：`/root/autodl-tmp/shellguard-ai`。模型目录：`/root/autodl-tmp/models/Qwen2.5-1.5B-Instruct`。
-当前 Web 使用 `training_outputs/autodl2080ti-v3/lora/final_adapter`，监听 `0.0.0.0:6006`，由独立 Supervisor 进程管理。登录用户名为 `student`，随机生成的密码仅保存在服务器 `.env`，文件权限为 600。
+当前 Web 使用 `training_outputs/autodl2080ti-v3/lora/final_adapter`，监听 `0.0.0.0:6006`，由独立 Supervisor 进程管理。登录用户名为 `student`，当前密码仅保存在服务器 `.env`，文件权限为 600。
 
 ## 访问
 
-**已验证公网地址（2026-10-27）：https://dba4c1843b5dd71ba0.gradio.live**
+**已验证公网地址（2026-10-27）：https://0e26bd6ced90cba556.gradio.live**
 
 [二维码 PNG](../artifacts/public/shellguard-qr.png) · [二维码 SVG](../artifacts/public/shellguard-qr.svg) · [公网验收记录](../artifacts/public/verification.json)
 
-不需要建立 SSH 隧道即可访问。用户名仍为 `student`，沿用现有 Web 密码。公网浏览器已验证登录、本地模型分析、带空格文件名转换、严重风险提示和 JSON 下载。
+不需要建立 SSH 隧道即可访问。用户名仍为 `student`，使用服务器当前配置的 Web 密码。公网浏览器已验证登录、本地模型分析、带空格文件名转换、严重风险提示和 JSON 下载。
 
 这是 Gradio 临时分享链接，官方说明有效期约 1 周；实例必须保持运行，应用重启后链接可能变化。它不是永久域名。到期或重启后从 `logs/web.log` 查找最新 `Running on public URL`，重新生成二维码；不要复用旧二维码。分享设置为 `.env` 中 `APP_SHARE=true`。若要长期固定入口，使用 AutoDL 控制台提供的 6006 自定义服务地址，或另配域名和反向代理。
 
