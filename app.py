@@ -18,7 +18,7 @@ from pydantic import ValidationError
 from src.analyzer import Analyzer
 from src.config import ConfigurationError, Settings, load_settings
 from src.examples import gradio_examples
-from src.schemas import AnalysisRequest, AnalysisResult, Mode, RISK_LABELS, Shell
+from src.schemas import AnalysisRequest, AnalysisResult, Mode, RISK_LABELS, RiskLevel, Shell
 
 EMPTY_REPORT = "## 从一条命令开始\n\n选择左侧任务，输入命令或载入示例，然后点击 **分析命令**。\n\n---\n\n**读懂命令** · 理解参数与执行意图\n\n**转换语法** · 在三种 Shell 之间迁移常见用法\n\n**识别风险** · 核对删除、覆盖及远程执行等操作\n\n> 结果将在这里呈现。所有命令仅作文本分析，不会执行。"
 CSS = """
@@ -46,10 +46,34 @@ body { background: #f3f6fa; }
 #analyze-button:hover { background: #066a75; border-color: #066a75; }
 #analysis-summary { padding: 12px 14px; border: 1px solid var(--border-color-primary); border-radius: 11px; background: var(--background-fill-secondary); font-size: 13px; }
 #result-panel { padding: 18px 8px; min-height: 350px; }
-#result-panel h2 { font-size: 22px; }
-#result-panel h3 { margin-top: 24px; font-size: 15px; }
+#result-panel h2 { font-size: 22px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+#result-panel h3 { margin-top: 28px; margin-bottom: 10px; font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #0b6e63; padding-bottom: 7px; border-bottom: 1px solid var(--border-color-primary); }
 #result-panel pre { border-radius: 10px; }
 #result-panel blockquote { border-left: 3px solid #16a6a0; padding: 10px 14px; }
+.dark #result-panel h3 { color: #6fe3bd; }
+.sg-badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .2px; white-space: nowrap; vertical-align: middle; }
+.sg-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: 0 0 auto; }
+.sg-badge-lg { font-size: 14px; padding: 5px 14px; }
+.sg-badge-low { background: #e3f6f1; color: #0b7a5c; }
+.sg-badge-medium { background: #fef2d4; color: #92650a; }
+.sg-badge-high { background: #ffe3cf; color: #9a3b12; }
+.sg-badge-critical { background: #fde1e1; color: #b42318; }
+.dark .sg-badge-low { background: #0b7a5c26; color: #6fe3bd; }
+.dark .sg-badge-medium { background: #92650a26; color: #f6c768; }
+.dark .sg-badge-high { background: #9a3b1226; color: #ffb088; }
+.dark .sg-badge-critical { background: #b4231826; color: #ff9d9d; }
+.sg-status { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 12px; font-size: 13px; line-height: 1.6; border: 1px solid transparent; margin: 4px 0 6px; }
+.sg-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
+.sg-status strong { font-weight: 650; }
+.sg-status-mock { background: #fef6e0; color: #8a5a00; border-color: #f3dfa0; }
+.sg-status-mock::before { background: #d9a512; }
+.sg-status-success { background: #e3f6f1; color: #0b6e63; border-color: #b9e8dd; }
+.sg-status-success::before { background: #0f9d6b; }
+.sg-status-warning { background: #fdecec; color: #9c2626; border-color: #f6c6c6; }
+.sg-status-warning::before { background: #d33636; }
+.dark .sg-status-mock { background: #8a5a0022; color: #f3c666; border-color: #8a5a0055; }
+.dark .sg-status-success { background: #0f9d6b22; color: #6fe3bd; border-color: #0f9d6b55; }
+.dark .sg-status-warning { background: #d3363622; color: #ff9d9d; border-color: #d3363655; }
 .sg-footer { display: flex; justify-content: space-between; gap: 16px; padding: 22px 4px 4px; color: #708197; font-size: 12px; border-top: 1px solid var(--border-color-primary); margin-top: 8px; }
 .sg-footer strong { color: #36516c; font-weight: 600; }
 .dark body { background: #0b1220; }
@@ -103,6 +127,24 @@ def _code(text: str) -> str:
     return f"{fence}text\n{text}\n{fence}"
 
 
+RISK_BADGE_CLASS = {
+    RiskLevel.LOW: "sg-badge-low",
+    RiskLevel.MEDIUM: "sg-badge-medium",
+    RiskLevel.HIGH: "sg-badge-high",
+    RiskLevel.CRITICAL: "sg-badge-critical",
+}
+
+
+def _badge(level: RiskLevel, *, large: bool = False) -> str:
+    """Colored risk pill. Safe to embed raw in Markdown: level is a closed enum, never model text."""
+    classes = f"sg-badge {RISK_BADGE_CLASS[level]}" + (" sg-badge-lg" if large else "")
+    return f'<span class="{classes}">{RISK_LABELS[level]} · {level.value}</span>'
+
+
+def _status_banner(kind: str, html_body: str) -> str:
+    return f'<div class="sg-status sg-status-{kind}">{html_body}</div>'
+
+
 def _render_result(result: AnalysisResult) -> tuple[str, str, str]:
     backend = {
         "mock": "模拟模式（未调用 API）",
@@ -111,7 +153,7 @@ def _render_result(result: AnalysisResult) -> tuple[str, str, str]:
         "unconfigured": "API 配置不完整（未调用模型）",
     }[result.backend]
     request = result.request
-    header = f"## 总风险：{RISK_LABELS[result.overall_risk]}（{result.overall_risk.value}）\n{backend}"
+    header = f"## 总风险：{_badge(result.overall_risk, large=True)}\n{backend}"
     context = f"**模式：** {request.mode.value} · {request.source_shell.value}"
     if request.mode == Mode.CONVERT:
         context += f" → {request.target_shell.value}"
@@ -138,13 +180,13 @@ def _render_result(result: AnalysisResult) -> tuple[str, str, str]:
         reasons = "\n".join(f"- {_plain(x)}" for x in analysis.risk_reasons) or "- 无附加说明。"
         differences = "\n".join(f"- {_plain(x)}" for x in analysis.semantic_differences) or "- 未提供差异；仍需检查 Shell 版本、路径和编码。"
         suggestions = "\n".join(f"- {_plain(x)}" for x in analysis.validation_suggestions)
-        model_section += f"\n\n### {label}\n{RISK_LABELS[analysis.risk_level]}（{analysis.risk_level.value}）\n\n{reasons}\n\n### 语义差异\n{differences}\n\n### 验证建议\n{suggestions}"
+        model_section += f"\n\n### {label}\n{_badge(analysis.risk_level)}\n\n{reasons}\n\n### 语义差异\n{differences}\n\n### 验证建议\n{suggestions}"
     def finding_location(finding):
         source = "原始命令" if finding.origin == "input" else "转换命令"
         return f"{source}第 {finding.statement_index} 条" if finding.statement_index else source
 
     rows = "\n".join(
-        f"- **{RISK_LABELS[x.level]} · {finding_location(x)} · {x.code}**：{_plain(x.reason)} 建议：{_plain(x.suggestion)}"
+        f"- {_badge(x.level)} **{finding_location(x)} · {x.code}**：{_plain(x.reason)} 建议：{_plain(x.suggestion)}"
         for x in result.static_findings
     ) or "- 文本启发式扫描未命中规则，不代表命令安全。"
     rendered = f"{header}\n\n{context}\n\n{model_section}\n\n### 静态规则检测（独立于模型）\n{rows}\n\n> **安全提示：** {_plain(result.warning)}"
@@ -176,7 +218,7 @@ def analyze_session(analyzer, raw, source, target, mode, history):
                            "payload": payload, "report": report})
         history = history[:20]
         status = "分析完成" if result.model else "模型未完成 · 静态检测可用"
-        summary = f"**{status}** · 风险：{RISK_LABELS[result.overall_risk]} · 命中 {len(result.static_findings)} 条规则 · {time.perf_counter() - started:.2f} 秒"
+        summary = f"**{status}** · 风险：{_badge(result.overall_risk)} · 命中 {len(result.static_findings)} 条规则 · {time.perf_counter() - started:.2f} 秒"
     else:
         summary = "**请检查输入**"
     return report, payload, copied, history, gr.update(choices=history_choices(history), value=None), summary, gr.update(value=None, interactive=False), gr.update(value=None, interactive=False)
@@ -228,14 +270,17 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
         history = gr.State([])
         gr.HTML(HERO_HTML)
         if backend == "mock":
-            gr.Markdown("**离线演示** · 未调用大模型。12 组预置样例可体验完整流程，未知命令仅提供静态检测。")
+            gr.HTML(_status_banner("mock", "<strong>离线演示</strong> · 未调用大模型。12 组预置样例可体验完整流程，未知命令仅提供静态检测。"))
         elif backend == "local":
             label = "LoRA 微调模型" if settings.local_adapter else "基础模型"
-            gr.Markdown(f"**本地推理 · {label}** · {_plain(Path(settings.local_model).name)} · 首次分析需加载权重。")
+            model_file = html.escape(Path(settings.local_model).name)
+            gr.HTML(_status_banner("success", f"<strong>本地推理 · {label}</strong> · {model_file} · 首次分析需加载权重。"))
         elif backend == "real":
-            gr.Markdown(f"**在线模型 · {_plain(settings.model_name)}** · 调用状态以每次分析结果为准。")
+            model_name = html.escape(settings.model_name)
+            gr.HTML(_status_banner("success", f"<strong>在线模型 · {model_name}</strong> · 调用状态以每次分析结果为准。"))
         else:
-            gr.Markdown(f"**配置提示：**{_plain(configuration_error)} 静态检测仍可使用。")
+            error_text = html.escape(configuration_error)
+            gr.HTML(_status_banner("warning", f"<strong>配置提示：</strong>{error_text} 静态检测仍可使用。"))
         with gr.Row(elem_id="workspace"):
             with gr.Column(scale=5, min_width=320, elem_id="input-panel"):
                 gr.Markdown("### 01 / 输入命令")
