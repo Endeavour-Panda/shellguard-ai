@@ -44,12 +44,17 @@ def test_export_preserves_request_and_backend(tmp_path, monkeypatch):
     assert '原始命令' in text and '模拟模式' in text and 'Get-ChildItem' in text
 
 
-def test_auth_requires_pair_and_secrets_are_not_in_repr():
-    assert launch_auth(Settings()) is None
+def test_auth_requires_pair_and_secrets_are_not_in_repr(tmp_path):
+    db_path = str(tmp_path / 'users.json')
+    auth, _store = launch_auth(Settings(users_db_path=db_path))
+    assert auth is None
     with pytest.raises(ConfigurationError):
-        launch_auth(Settings(app_username='student'))
-    settings = Settings(app_username='student', app_password='private-password')
-    assert launch_auth(settings) == ('student', 'private-password')
+        launch_auth(Settings(app_username='student', users_db_path=db_path))
+    settings = Settings(app_username='student', app_password='private-password', users_db_path=db_path)
+    auth, _store = launch_auth(settings)
+    assert callable(auth)
+    assert auth('student', 'private-password') is True
+    assert auth('student', 'wrong-password') is False
     assert 'private-password' not in repr(settings)
 
 

@@ -2,6 +2,7 @@
 
 项目目录：`/root/autodl-tmp/shellguard-ai`。模型目录：`/root/autodl-tmp/models/Qwen2.5-1.5B-Instruct`。
 当前 Web 使用 `training_outputs/autodl2080ti-v3/lora/final_adapter`，监听 `0.0.0.0:6006`，由独立 Supervisor 进程管理。登录用户名为 `student`，当前密码仅保存在服务器 `.env`，文件权限为 600。
+登录页现在带"注册"入口，学生也可以自助创建账号；账号文件默认存在项目目录下的 `.runtime/users.json`（裸机部署下随进程用户正常继承读写权限，无需额外配置）。
 
 ## 访问
 

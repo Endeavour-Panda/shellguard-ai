@@ -44,7 +44,8 @@ docker compose logs --tail=80 shellguard
 Python 启动时将 `APP_HOST=0.0.0.0`；Docker 则设置 `APP_BIND_ADDRESS=0.0.0.0`。
 同一局域网设备访问 `http://服务器局域网IP:7860`，需允许相应入站连接。
 公网服务器建议只将容器端口发布到 127.0.0.1，并由 Nginx/Caddy 提供 HTTPS 反向代理，转发到 7860 端口；代理需支持长连接与流式响应。
-在 `.env` 同时配置 `APP_USERNAME` 和 `APP_PASSWORD` 可开启登录，修改后重启。密码不要提交 Git。
+在 `.env` 同时配置 `APP_USERNAME` 和 `APP_PASSWORD` 可开启登录（管理员账号），修改后重启。密码不要提交 Git。
+开启登录后，登录页会带"注册"入口（`/register`），任何人都可以自助创建账号；账号保存在本地文件 `USERS_DB_PATH`（默认 `.runtime/users.json`，已在 `.gitignore`，密码经加盐哈希后存储，不是明文）。即使不配置 `APP_USERNAME`/`APP_PASSWORD`，只要曾经有人通过 `/register` 注册过账号，应用也会自动要求登录；全新部署、账号库为空且未配置管理员账号时保持当前的无需登录直接可用。`MAX_USERS`（默认 200）限制可注册账号数量，避免被脚本刷注册占满磁盘。
 公网 URL 取决于实际服务器、域名和网络配置，本仓库不附虚构的线上地址或二维码。确认手机能访问真实 HTTPS 链接后再生成二维码用于展示。
 
 ## 课堂展示（约 3 分钟）

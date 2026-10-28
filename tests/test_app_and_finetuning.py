@@ -12,6 +12,25 @@ def test_app_builds_with_offline_settings():
     assert len(gradio_examples()) >= 10
 
 
+def test_launch_auth_stays_open_when_nothing_configured(tmp_path):
+    import app
+    settings = Settings(users_db_path=str(tmp_path / "users.json"))
+    auth, store = app.launch_auth(settings)
+    assert auth is None
+    assert store.has_any_user() is False
+
+
+def test_launch_auth_gates_with_admin_credentials_and_registered_users(tmp_path):
+    import app
+    settings = Settings(users_db_path=str(tmp_path / "users.json"), app_username="student", app_password="correct-horse")
+    auth, store = app.launch_auth(settings)
+    assert callable(auth)
+    assert auth("student", "correct-horse") is True
+    assert auth("student", "wrong") is False
+    store.register("newkid", "a-long-password")
+    assert auth("newkid", "a-long-password") is True
+
+
 def test_render_escapes_untrusted_model_markup_and_preserves_copy_payload():
     import app
     from src.analyzer import Analyzer

@@ -4,17 +4,21 @@ import html
 import json
 import os
 import re
+import secrets
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
 os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "False")
 
+import fastapi
 import gradio as gr
+from fastapi.responses import HTMLResponse, RedirectResponse
 from gradio.processing_utils import save_bytes_to_cache
 from gradio.utils import get_upload_folder
 from pydantic import ValidationError
 
+from src.accounts import UserStore
 from src.analyzer import Analyzer
 from src.config import ConfigurationError, Settings, load_settings
 from src.examples import gradio_examples
@@ -79,6 +83,13 @@ body { background: #f3f6fa; }
 .dark body { background: #0b1220; }
 .dark .sg-footer strong { color: #c2d4e5; }
 footer { display: none !important; }
+#account-bar:empty { display: none; }
+.sg-account-bar { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 2px 4px 10px; font-size: 12px; color: #52657a; }
+.sg-account-bar .sg-account-dot { width: 6px; height: 6px; border-radius: 50%; background: #0f9d6b; flex: 0 0 auto; }
+.sg-account-bar a { color: #087f8c; font-weight: 600; text-decoration: none; }
+.sg-account-bar a:hover { text-decoration: underline; }
+.dark .sg-account-bar { color: #9fb4c7; }
+.dark .sg-account-bar a { color: #6fe3bd; }
 @media (max-width: 760px) {
  .gradio-container { padding: 14px 12px !important; }
  .sg-hero { grid-template-columns: 1fr; gap: 22px; padding: 26px 22px; border-radius: 18px; }
@@ -112,6 +123,7 @@ AUTH_MESSAGE = """<div style="text-align:center;padding:12px 0 22px">
 <div style="color:#087f8c;font-size:12px;letter-spacing:2px;margin-bottom:12px">燕山大学 · 大模型应用实验</div>
 <h1 style="font-size:30px;margin:0 0 12px;letter-spacing:-1px">ShellGuard AI</h1>
 <p style="opacity:.75;line-height:1.8">跨 Shell 命令智能分析助手<br>登录后开始解释、转换与风险分析</p>
+<p style="font-size:13px;margin-top:14px">没有账号？<a href="./register" style="color:#087f8c;font-weight:600">点击注册</a></p>
 <div style="font-size:13px;color:#087f8c;margin-top:18px">李振昊创作 · 燕山大学</div></div>"""
 
 
@@ -143,6 +155,96 @@ def _badge(level: RiskLevel, *, large: bool = False) -> str:
 
 def _status_banner(kind: str, html_body: str) -> str:
     return f'<div class="sg-status sg-status-{kind}">{html_body}</div>'
+
+
+def _account_bar(request: gr.Request) -> str:
+    username = getattr(request, "username", None) if request else None
+    if not username:
+        return ""
+    return (
+        '<div class="sg-account-bar"><span class="sg-account-dot"></span>已登录：'
+        f"<strong>{html.escape(username)}</strong> · <a href=\"./logout\">退出登录</a></div>"
+    )
+
+
+def _register_page_html(*, error: str | None = None, username: str = "") -> str:
+    error_html = f'<p class="sg-register-error">{html.escape(error)}</p>' if error else ""
+    username_value = html.escape(username)
+    return f"""<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>注册 · ShellGuard AI</title>
+<style>
+  body {{ margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background: radial-gradient(ellipse at 85% 15%, #16556a 0, transparent 56%), #101d35;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color:#edf6ff; padding:24px; box-sizing:border-box; }}
+  .sg-register-card {{ width:100%; max-width:380px; background:#0d1a30; border:1px solid #ffffff1f;
+    border-radius:20px; padding:36px 32px; box-shadow:0 20px 48px #00000030; box-sizing:border-box; }}
+  .sg-register-eyebrow {{ color:#8ee1d5; font-size:12px; font-weight:600; letter-spacing:2px; margin-bottom:10px; }}
+  .sg-register-card h1 {{ font-size:26px; margin:0 0 6px; letter-spacing:-.5px; }}
+  .sg-register-card p.sg-register-sub {{ color:#c4d5e8; font-size:13px; line-height:1.7; margin:0 0 20px; }}
+  .sg-register-card label {{ display:block; font-size:12px; color:#9fb4c7; margin:16px 0 6px; }}
+  .sg-register-card input {{ width:100%; box-sizing:border-box; padding:10px 12px; border-radius:10px;
+    border:1px solid #ffffff2a; background:#071327; color:#edf6ff; font-size:14px; }}
+  .sg-register-card input:focus {{ outline:2px solid #087f8c; border-color:#087f8c; }}
+  .sg-register-card button {{ width:100%; margin-top:26px; padding:11px; border-radius:11px; border:1px solid #087f8c;
+    background:#087f8c; color:#fff; font-weight:650; font-size:14px; cursor:pointer; }}
+  .sg-register-card button:hover {{ background:#066a75; }}
+  .sg-register-error {{ background:#fdecec22; border:1px solid #f6c6c655; color:#ffb3b3; font-size:13px;
+    padding:10px 12px; border-radius:10px; margin:0 0 18px; }}
+  .sg-register-footer {{ text-align:center; margin-top:20px; font-size:12px; color:#8098b2; }}
+  .sg-register-footer a {{ color:#6fe3bd; text-decoration:none; font-weight:600; }}
+  .sg-register-footer a:hover {{ text-decoration:underline; }}
+</style>
+</head>
+<body>
+  <div class="sg-register-card">
+    <div class="sg-register-eyebrow">燕山大学 · 大模型应用实验</div>
+    <h1>创建账号</h1>
+    <p class="sg-register-sub">注册后立即登录 ShellGuard AI，开始解释、转换与风险分析。</p>
+    {error_html}
+    <form method="post" action="./register">
+      <label for="username">用户名</label>
+      <input id="username" name="username" value="{username_value}" required minlength="3" maxlength="32" pattern="[A-Za-z0-9_]+" autocomplete="username" autofocus>
+      <label for="password">密码</label>
+      <input id="password" name="password" type="password" required minlength="8" maxlength="128" autocomplete="new-password">
+      <label for="confirm">确认密码</label>
+      <input id="confirm" name="confirm" type="password" required minlength="8" maxlength="128" autocomplete="new-password">
+      <button type="submit">注册并登录</button>
+    </form>
+    <div class="sg-register-footer">已有账号？<a href="./">返回登录</a></div>
+  </div>
+</body>
+</html>"""
+
+
+def register_routes(fastapi_app: fastapi.FastAPI, store: UserStore) -> None:
+    """Self-service registration, mounted outside Gradio's auth-gated routes."""
+
+    @fastapi_app.get("/register")
+    async def register_form() -> HTMLResponse:
+        return HTMLResponse(_register_page_html())
+
+    @fastapi_app.post("/register")
+    async def register_submit(request: fastapi.Request):
+        form = await request.form()
+        username = str(form.get("username", "")).strip()
+        password = str(form.get("password", ""))
+        confirm = str(form.get("confirm", ""))
+        if password != confirm:
+            return HTMLResponse(_register_page_html(error="两次输入的密码不一致", username=username), status_code=400)
+        try:
+            store.register(username, password)
+        except ValueError as exc:
+            return HTMLResponse(_register_page_html(error=str(exc), username=username), status_code=400)
+        token = secrets.token_urlsafe(16)
+        fastapi_app.tokens[token] = username
+        response = RedirectResponse(url="./", status_code=303)
+        response.set_cookie(key=f"access-token-{fastapi_app.cookie_id}", value=token, httponly=True, samesite="none", secure=True)
+        response.set_cookie(key=f"access-token-unsecure-{fastapi_app.cookie_id}", value=token, httponly=True)
+        return response
 
 
 def _render_result(result: AnalysisResult) -> tuple[str, str, str]:
@@ -248,11 +350,21 @@ def export_result(payload):
     )
 
 
-def launch_auth(settings):
+def launch_auth(settings: Settings) -> tuple:
     password = settings.app_password.get_secret_value()
     if bool(settings.app_username) != bool(password):
         raise ConfigurationError("访问口令配置不完整：APP_USERNAME 与 APP_PASSWORD 必须同时填写。")
-    return (settings.app_username, password) if password else None
+    reserved = frozenset({settings.app_username}) if settings.app_username else frozenset()
+    store = UserStore(Path(settings.users_db_path), max_users=settings.max_users, reserved_usernames=reserved)
+    if not password and not store.has_any_user():
+        return None, store
+
+    def verify_login(username: str, candidate_password: str) -> bool:
+        if settings.app_username and username == settings.app_username and candidate_password == password:
+            return True
+        return store.verify(username, candidate_password)
+
+    return verify_login, store
 
 
 def create_app(settings: Settings | None = None) -> gr.Blocks:
@@ -268,6 +380,7 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
                    font=["system-ui", "sans-serif"], font_mono=["ui-monospace", "monospace"]),
                    css=CSS, analytics_enabled=False, delete_cache=(3600, 3600)) as demo:
         history = gr.State([])
+        account_bar = gr.HTML(elem_id="account-bar")
         gr.HTML(HERO_HTML)
         if backend == "mock":
             gr.HTML(_status_banner("mock", "<strong>离线演示</strong> · 未调用大模型。12 组预置样例可体验完整流程，未知命令仅提供静态检测。"))
@@ -293,12 +406,13 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
                     analyze_button = gr.Button("分析命令", variant="primary", elem_id="analyze-button")
                     clear_button = gr.Button("清空输入与结果")
                 gr.Markdown("仅分析文本，不执行命令。请勿输入密码、令牌等敏感内容。")
-                with gr.Accordion("示例库 · 点击载入", open=True):
-                    gr.Examples(examples=gradio_examples(), inputs=[command, source, target, mode], examples_per_page=6, label="12 个场景")
-                with gr.Accordion("本次会话记录", open=False):
-                    gr.Markdown("最多保留最近 20 条；不同浏览器会话相互隔离，刷新页面后重置。")
-                    history_picker = gr.Dropdown(choices=[], label="选择记录以恢复输入与结果", interactive=True)
-                    clear_history = gr.Button("清除会话记录")
+                with gr.Tabs():
+                    with gr.Tab("示例库"):
+                        gr.Examples(examples=gradio_examples(), inputs=[command, source, target, mode], examples_per_page=6, label="12 个场景")
+                    with gr.Tab("本次会话记录"):
+                        gr.Markdown("最多保留最近 20 条；不同浏览器会话相互隔离，刷新页面后重置。")
+                        history_picker = gr.Dropdown(choices=[], label="选择记录以恢复输入与结果", interactive=True)
+                        clear_history = gr.Button("清除会话记录")
             with gr.Column(scale=7, min_width=320, elem_id="output-panel"):
                 gr.Markdown("### 02 / 分析结果")
                 summary = gr.Markdown("等待分析 · 选择示例或输入命令开始", elem_id="analysis-summary")
@@ -332,11 +446,17 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
         clear_history.click(lambda: ([], gr.update(choices=[], value=None)), outputs=[history, history_picker], api_name=False)
         export_button.click(lambda payload: tuple(gr.update(value=path, interactive=True) for path in export_result(payload)),
                             [structured], [download_md, download_json], api_name=False)
+        demo.load(_account_bar, inputs=None, outputs=account_bar, api_name=False)
     return demo.queue(max_size=20, default_concurrency_limit=4)
 
 
 if __name__ == "__main__":
     config = load_settings()
-    auth = launch_auth(config)
-    create_app(config).launch(server_name=config.host, server_port=config.port, share=config.share,
-                             auth=auth, auth_message=AUTH_MESSAGE, show_error=False, max_threads=8)
+    auth, user_store = launch_auth(config)
+    demo = create_app(config)
+    demo.launch(server_name=config.host, server_port=config.port, share=config.share,
+                auth=auth, auth_message=AUTH_MESSAGE, show_error=False, max_threads=8,
+                prevent_thread_lock=True)
+    if auth is not None:
+        register_routes(demo.app, user_store)
+    demo.block_thread()

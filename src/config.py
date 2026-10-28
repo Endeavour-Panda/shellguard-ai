@@ -24,6 +24,8 @@ class Settings(BaseModel):
     local_adapter: str = ""
     app_username: str = ""
     app_password: SecretStr = Field(default_factory=lambda: SecretStr(""))
+    users_db_path: str = ".runtime/users.json"
+    max_users: int = Field(default=200, ge=1, le=100000)
     timeout_seconds: float = Field(default=30, ge=1, le=180)
     max_output_tokens: int = Field(default=2500, ge=256, le=8192)
     host: str = "127.0.0.1"
@@ -84,4 +86,6 @@ def load_settings() -> Settings:
         local_adapter=os.getenv("LOCAL_ADAPTER", "").strip(),
         app_username=os.getenv("APP_USERNAME", "").strip(),
         app_password=SecretStr(os.getenv("APP_PASSWORD", "")),
+        users_db_path=os.getenv("USERS_DB_PATH", ".runtime/users.json").strip(),
+        max_users=os.getenv("MAX_USERS", "200"),
     )

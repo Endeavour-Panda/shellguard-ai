@@ -5,6 +5,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt && useradd --create-home --uid 1000 appuser
 COPY --chown=appuser:appuser app.py ./
 COPY --chown=appuser:appuser src ./src
+RUN mkdir -p /app/.runtime && chown -R appuser:appuser /app/.runtime
 USER appuser
 EXPOSE 7860
 HEALTHCHECK --interval=30s --timeout=5s --start-period=45s --retries=3 CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:7860/', timeout=4)"
