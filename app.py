@@ -157,6 +157,15 @@ def _status_banner(kind: str, html_body: str) -> str:
     return f'<div class="sg-status sg-status-{kind}">{html_body}</div>'
 
 
+def _toggle_shell_fields(mode_value: str):
+    """Only cross-shell conversion needs a target shell; explain/risk analysis use one Shell."""
+    is_convert = mode_value == Mode.CONVERT.value
+    return (
+        gr.update(label="源 Shell" if is_convert else "Shell"),
+        gr.update(visible=is_convert),
+    )
+
+
 def _account_bar(request: gr.Request) -> str:
     username = getattr(request, "username", None) if request else None
     if not username:
@@ -399,8 +408,8 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
                 gr.Markdown("### 01 / 输入命令")
                 mode = gr.Radio([x.value for x in Mode], value=Mode.EXPLAIN.value, label="分析任务")
                 with gr.Row():
-                    source = gr.Dropdown([x.value for x in Shell], value=Shell.BASH.value, label="源 Shell")
-                    target = gr.Dropdown([x.value for x in Shell], value=Shell.POWERSHELL.value, label="目标 Shell", interactive=False)
+                    source = gr.Dropdown([x.value for x in Shell], value=Shell.BASH.value, label="Shell")
+                    target = gr.Dropdown([x.value for x in Shell], value=Shell.POWERSHELL.value, label="目标 Shell", visible=False)
                 command = gr.Textbox(label="命令文本", placeholder="输入 ls，或从下方示例开始…", lines=7, max_lines=16, max_length=8000)
                 with gr.Row():
                     analyze_button = gr.Button("分析命令", variant="primary", elem_id="analyze-button")
@@ -437,8 +446,7 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
                              [command, source, target, mode, history],
                              [*outputs, history, history_picker, summary, download_md, download_json],
                              api_name="analyze", concurrency_limit=4)
-        mode.change(lambda value: gr.update(interactive=value == Mode.CONVERT.value),
-                    inputs=[mode], outputs=[target], queue=False, api_name=False)
+        mode.change(_toggle_shell_fields, inputs=[mode], outputs=[source, target], queue=False, api_name=False)
         clear_button.click(lambda: ("", EMPTY_REPORT, "", "", "等待分析", gr.update(value=None, interactive=False), gr.update(value=None, interactive=False)),
                            outputs=[command, *outputs, summary, download_md, download_json], api_name=False)
         history_picker.input(restore_history, [history_picker, history],
