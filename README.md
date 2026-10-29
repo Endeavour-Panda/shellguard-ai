@@ -14,7 +14,7 @@ ShellGuard AI 是一个基于 Python、Gradio 和 OpenAI 兼容 API 的 Shell �
 
 ## 公网演示
 
-[打开 ShellGuard AI](https://8ba1ea41a7112e6e6c.gradio.live) · [二维码与真实截图](artifacts/public/README.md)。需要当前 Web 登录口令。Gradio 临时链接约一周有效，实例必须保持运行，重启后地址可能变化。
+[打开 ShellGuard AI](https://d1a2ff15f306746aa6.gradio.live) · [当前二维码](artifacts/public/current/shellguard-qr.png) · [历史真实截图](artifacts/public/README.md)。需要当前 Web 登录口令。Gradio 临时链接约一周有效，实例必须保持运行，重启后地址可能变化。
 
 ## 启动
 
@@ -46,6 +46,10 @@ SHELLGUARD_BACKEND=auto
 离线模式提供 12 组手写样例对照，不做通用命令推理。对未知输入，解释和转换会明确标记为不可用，只运行静态文本规则。高风险静态规则可独立工作。真实请求包含命令文本，请勿发送密码、令牌或敏感路径。
 
 ## 页面使用
+
+源 Shell 默认“自动识别”，按命令特征识别 Bash、PowerShell 或 CMD，也可手动选择。通用命令或混合语法会提示暂按 Bash 分析，请按实际运行环境确认；识别结果不代表命令可执行。
+
+分析前会拦截空输入、不可见控制字符及仅含操作符的无效输入；疑似 Bash 引号未闭合或转义未完成会显示提示。检测不会执行命令，也无法确认目标机器是否安装工具或完整语法是否合法。自定义命令和危险命令仍可提交模型及静态风险分析。
 
 选择“命令解释”“跨 Shell 转换”或“风险分析”，再选择源 Shell。转换模式可设置目标 Shell。输入命令或选择示例后点击“分析命令”；结果分别列出总体风险、模型解释、转换建议、语义差异、验证建议及原始/转换文本各自命中的静态规则。转换命令会注明未经验证。
 

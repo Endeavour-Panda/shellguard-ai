@@ -22,6 +22,7 @@ from src.accounts import UserStore
 from src.analyzer import Analyzer
 from src.config import ConfigurationError, Settings, load_settings
 from src.examples import gradio_examples
+from src.input_checks import AUTO_SHELL, detect_shell, input_feedback, validate_command_text
 from src.schemas import AnalysisRequest, AnalysisResult, Mode, RISK_LABELS, RiskLevel, Shell
 
 EMPTY_REPORT = "## 从一条命令开始\n\n选择左侧任务，输入命令或载入示例，然后点击 **分析命令**。\n\n---\n\n**读懂命令** · 理解参数与执行意图\n\n**转换语法** · 在三种 Shell 之间迁移常见用法\n\n**识别风险** · 核对删除、覆盖及远程执行等操作\n\n> 结果将在这里呈现。所有命令仅作文本分析，不会执行。"
@@ -307,11 +308,19 @@ def _render_result(result: AnalysisResult) -> tuple[str, str, str]:
 
 def run_analysis(analyzer: Analyzer, raw: str, source: str, target: str, mode: str) -> tuple[str, str, str]:
     try:
+        validate_command_text(raw)
+        note = input_feedback(raw, source)
+        if source == AUTO_SHELL:
+            source = detect_shell(raw)[0].value
         request = AnalysisRequest(command=raw, source_shell=source, target_shell=target, mode=mode)
     except ValidationError as exc:
         details = "；".join(e["msg"] for e in exc.errors(include_input=False, include_url=False))
         return f"### 输入错误\n{_plain(details)}", "", ""
-    return _render_result(analyzer.analyze(request))
+    except ValueError as exc:
+        return f"### 输入错误\n{_plain(str(exc))}", "", ""
+    report, payload, _ = _render_result(analyzer.analyze(request))
+    report = f"{_plain(note)}\n\n{report}"
+    return report, payload, report
 
 
 def history_choices(history):
@@ -408,9 +417,10 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
                 gr.Markdown("### 01 / 输入命令")
                 mode = gr.Radio([x.value for x in Mode], value=Mode.EXPLAIN.value, label="分析任务")
                 with gr.Row():
-                    source = gr.Dropdown([x.value for x in Shell], value=Shell.BASH.value, label="Shell")
+                    source = gr.Dropdown([AUTO_SHELL, *[x.value for x in Shell]], value=AUTO_SHELL, label="源 Shell（可自动识别或手动选择）")
                     target = gr.Dropdown([x.value for x in Shell], value=Shell.POWERSHELL.value, label="目标 Shell", visible=False)
                 command = gr.Textbox(label="命令文本", placeholder="输入 ls，或从下方示例开始…", lines=7, max_lines=16, max_length=8000)
+                input_status = gr.Markdown("默认自动识别 Shell；通用或混合语法会提示手动确认。输入仅作文本检测。")
                 with gr.Row():
                     analyze_button = gr.Button("分析命令", variant="primary", elem_id="analyze-button")
                     clear_button = gr.Button("清空输入与结果")
@@ -442,6 +452,8 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
         gr.HTML('<div class="sg-footer"><span><strong>ShellGuard AI</strong> · 让命令更清晰</span><span>李振昊创作 · 燕山大学 · 课程实验作品</span></div>')
 
         outputs = [report, structured, copy_result]
+        command.change(input_feedback, [command, source], input_status, queue=False, api_name=False)
+        source.change(input_feedback, [command, source], input_status, queue=False, api_name=False)
         analyze_button.click(lambda *values: analyze_session(analyzer, *values),
                              [command, source, target, mode, history],
                              [*outputs, history, history_picker, summary, download_md, download_json],
