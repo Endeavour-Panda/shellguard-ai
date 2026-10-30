@@ -23,6 +23,7 @@ from src.analyzer import Analyzer
 from src.config import ConfigurationError, Settings, load_settings
 from src.examples import gradio_examples
 from src.input_checks import AUTO_SHELL, detect_shell, input_feedback, validate_command_text
+from src.mobile_login import MOBILE_LOGIN_HTML, register_mobile_login_routes
 from src.schemas import AnalysisRequest, AnalysisResult, Mode, RISK_LABELS, RiskLevel, Shell
 
 EMPTY_REPORT = "## 从一条命令开始\n\n选择左侧任务，输入命令或载入示例，然后点击 **分析命令**。\n\n---\n\n**读懂命令** · 理解参数与执行意图\n\n**转换语法** · 在三种 Shell 之间迁移常见用法\n\n**识别风险** · 核对删除、覆盖及远程执行等操作\n\n> 结果将在这里呈现。所有命令仅作文本分析，不会执行。"
@@ -126,6 +127,7 @@ AUTH_MESSAGE = """<div style="text-align:center;padding:12px 0 22px">
 <p style="opacity:.75;line-height:1.8">跨 Shell 命令智能分析助手<br>登录后开始解释、转换与风险分析</p>
 <p style="font-size:13px;margin-top:14px">没有账号？<a href="./register" style="color:#087f8c;font-weight:600">点击注册</a></p>
 <div style="font-size:13px;color:#087f8c;margin-top:18px">李振昊创作 · 燕山大学</div></div>"""
+AUTH_MESSAGE += '<div style="text-align:center">' + MOBILE_LOGIN_HTML + '</div>'
 
 
 
@@ -399,6 +401,7 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
                    css=CSS, analytics_enabled=False, delete_cache=(3600, 3600)) as demo:
         history = gr.State([])
         account_bar = gr.HTML(elem_id="account-bar")
+        gr.HTML('<div style="text-align:right">' + MOBILE_LOGIN_HTML + '</div>')
         gr.HTML(HERO_HTML)
         if backend == "mock":
             gr.HTML(_status_banner("mock", "<strong>离线演示</strong> · 未调用大模型。12 组预置样例可体验完整流程，未知命令仅提供静态检测。"))
@@ -477,6 +480,7 @@ if __name__ == "__main__":
     demo.launch(server_name=config.host, server_port=config.port, share=config.share,
                 auth=auth, auth_message=AUTH_MESSAGE, show_error=False, max_threads=8,
                 prevent_thread_lock=True)
+    register_mobile_login_routes(demo.app)
     if auth is not None:
         register_routes(demo.app, user_store)
     demo.block_thread()

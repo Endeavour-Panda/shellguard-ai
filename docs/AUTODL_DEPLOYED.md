@@ -6,9 +6,9 @@
 
 ## 访问
 
-**已验证公网地址（2026-10-27）：https://8ba1ea41a7112e6e6c.gradio.live**
+**已验证公网地址（2026-10-30）：https://affdf83b411c5778fa.gradio.live**
 
-[二维码 PNG](../artifacts/public/shellguard-qr.png) · [二维码 SVG](../artifacts/public/shellguard-qr.svg) · [公网验收记录](../artifacts/public/verification.json)
+[当前二维码 PNG](../artifacts/public/current/shellguard-qr.png) · [当前二维码 SVG](../artifacts/public/current/shellguard-qr.svg) · [手机登录验收记录](../artifacts/public/current/mobile-login-verification.json)
 
 不需要建立 SSH 隧道即可访问。用户名仍为 `student`，使用服务器当前配置的 Web 密码。公网浏览器已验证登录、本地模型分析、带空格文件名转换、严重风险提示和 JSON 下载。
 
