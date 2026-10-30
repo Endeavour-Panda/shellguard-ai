@@ -1,0 +1,17 @@
+{
+  "url": "https://7089f953136cbb227a.gradio.live/",
+  "login_hover": "passed",
+  "workspace_qr_removed": true,
+  "account_bar": [
+    {
+      "width": 1440,
+      "noScroll": true,
+      "border": "0px"
+    },
+    {
+      "width": 390,
+      "noScroll": true,
+      "border": "0px"
+    }
+  ]
+}

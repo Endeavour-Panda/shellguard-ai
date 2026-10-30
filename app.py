@@ -400,8 +400,7 @@ def create_app(settings: Settings | None = None) -> gr.Blocks:
                    font=["system-ui", "sans-serif"], font_mono=["ui-monospace", "monospace"]),
                    css=CSS, analytics_enabled=False, delete_cache=(3600, 3600)) as demo:
         history = gr.State([])
-        account_bar = gr.HTML(elem_id="account-bar")
-        gr.HTML('<div style="text-align:right">' + MOBILE_LOGIN_HTML + '</div>')
+        account_bar = gr.HTML(elem_id="account-bar", container=False, padding=False)
         gr.HTML(HERO_HTML)
         if backend == "mock":
             gr.HTML(_status_banner("mock", "<strong>离线演示</strong> · 未调用大模型。12 组预置样例可体验完整流程，未知命令仅提供静态检测。"))

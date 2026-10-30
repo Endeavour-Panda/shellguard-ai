@@ -14,7 +14,7 @@ ShellGuard AI 是一个基于 Python、Gradio 和 OpenAI 兼容 API 的 Shell �
 
 ## 公网演示
 
-[打开 ShellGuard AI](https://affdf83b411c5778fa.gradio.live) · [当前二维码](artifacts/public/current/shellguard-qr.png) · [历史真实截图](artifacts/public/README.md)。需要当前 Web 登录口令。Gradio 临时链接约一周有效，实例必须保持运行，重启后地址可能变化。
+[打开 ShellGuard AI](https://7089f953136cbb227a.gradio.live) · [当前二维码](artifacts/public/current/shellguard-qr.png) · [历史真实截图](artifacts/public/README.md)。需要当前 Web 登录口令。Gradio 临时链接约一周有效，实例必须保持运行，重启后地址可能变化。
 
 ## 启动
 
@@ -47,7 +47,7 @@ SHELLGUARD_BACKEND=auto
 
 ## 页面使用
 
-登录页和分析工作台提供“手机端登录”入口：电脑悬停或键盘聚焦可显示二维码，手机可点击展开。二维码由当前访问地址在服务端生成，不含账号密码或会话令牌；扫码后仍需登录。应用重启更换临时分享地址后，应打开新地址再扫码，旧分享地址仍会失效。
+登录页提供“手机端登录”入口：电脑悬停或键盘聚焦可显示二维码，手机可点击展开。登录后工作台顶栏仅显示账号信息与退出入口。二维码由当前访问地址在服务端生成，不含账号密码或会话令牌；扫码后仍需登录。应用重启更换临时分享地址后，应打开新地址再扫码，旧分享地址仍会失效。
 
 源 Shell 默认“自动识别”，按命令特征识别 Bash、PowerShell 或 CMD，也可手动选择。通用命令或混合语法会提示暂按 Bash 分析，请按实际运行环境确认；识别结果不代表命令可执行。
 
