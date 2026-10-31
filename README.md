@@ -14,7 +14,7 @@ ShellGuard AI 是一个基于 Python、Gradio 和 OpenAI 兼容 API 的 Shell �
 
 ## 公网演示
 
-[打开 ShellGuard AI](https://21de5db971f1c99d26.gradio.live) · [当前二维码](artifacts/public/current/shellguard-qr.png) · [当前 API 工作台截图](artifacts/public/current/current-api-workspace.png) · [历史真实截图](artifacts/public/README.md)。需要当前 Web 登录口令。Gradio 临时链接约一周有效，实例必须保持运行，重启后地址可能变化。
+[打开 ShellGuard AI](https://21de5db971f1c99d26.gradio.live) · [当前二维码](artifacts/public/current/shellguard-qr.png) · [历史真实截图](artifacts/public/README.md)。需要当前 Web 登录口令。Gradio 临时链接约一周有效，实例必须保持运行，重启后地址可能变化。
 
 ## 启动
 

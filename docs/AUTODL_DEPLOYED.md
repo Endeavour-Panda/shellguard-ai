@@ -1,14 +1,14 @@
 # AutoDL 实际部署操作说明
 
 项目目录：`/root/autodl-tmp/shellguard-ai`。模型目录：`/root/autodl-tmp/models/Qwen2.5-1.5B-Instruct`。
-当前 Web 使用 DashScope 的 `qwen-plus` API，监听 `0.0.0.0:6006`，由独立 Supervisor 进程管理。本地第三轮适配器 `training_outputs/autodl2080ti-v3/lora/final_adapter` 仍保留，供本地推理和实验复核。登录用户名为 `student`，当前密码仅保存在服务器 `.env`，文件权限为 600。
+当前 Web 使用 `training_outputs/autodl2080ti-v3/lora/final_adapter`，监听 `0.0.0.0:6006`，由独立 Supervisor 进程管理。登录用户名为 `student`，当前密码仅保存在服务器 `.env`，文件权限为 600。
 登录页现在带"注册"入口，学生也可以自助创建账号；账号文件默认存在项目目录下的 `.runtime/users.json`（裸机部署下随进程用户正常继承读写权限，无需额外配置）。
 
 ## 访问
 
 **已验证公网地址（2026-10-31）：https://21de5db971f1c99d26.gradio.live**
 
-[当前二维码 PNG](../artifacts/public/current/shellguard-qr.png) · [当前二维码 SVG](../artifacts/public/current/shellguard-qr.svg) · [当前 API 工作台截图](../artifacts/public/current/current-api-workspace.png) · [当前服务器同步记录](../artifacts/public/current/server-sync-verification.json)
+[当前二维码 PNG](../artifacts/public/current/shellguard-qr.png) · [当前二维码 SVG](../artifacts/public/current/shellguard-qr.svg) · [手机登录验收记录](../artifacts/public/current/mobile-login-verification.json)
 
 不需要建立 SSH 隧道即可访问。用户名仍为 `student`，使用服务器当前配置的 Web 密码。公网浏览器已验证登录、本地模型分析、带空格文件名转换、严重风险提示和 JSON 下载。
 
